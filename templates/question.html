@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+
+    <style>
+        .badge {
+            text-decoration: none;
+            font-weight: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-secondary">
+        <div class="container-fluid">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <a class="navbar-brand" href="#">ASKME</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <form class="col-7 d-flex" role="search">
+                    <input class=" form-control me-3" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Ask</button>
+                </form>
+
+                <div class="d-flex flex-row gap-3">
+                    <a href="#">Login</a>
+                    <a href="#">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-3">
+        <div class="d-flex gap-3 mb-3 align-items-center">
+            <h1>New Question</h1>
+        </div>
+
+        <div class="row gx-5">
+            <div class="col-8">
+                    <div class="col mb-3">
+                        <h5 class="card-title mb-2">Title</h5>
+                        <input class="form-control" type="text" placeholder="Enter title for your question" aria-label="question title">
+                    </div>
+
+                    <div class="col mb-3">
+                        <h5 class="card-text mb-2">Text</h5>
+                        <div class="form-floating p-0">
+                            <textarea class="form-control" placeholder="Leave your text here" id="floatingTextarea2" style="height: 200px"></textarea>
+                            <label for="floatingTextarea2">Description</label>
+                        </div>
+                    </div>
+
+                    <div class="col mb-3">
+                        <h5 class="card-tags mb-2">Tags</h5>
+                        <input class="form-control" type="text" placeholder="Enter tags for your question" aria-label="question tags">
+                    </div>
+
+                    <button type="button" class="col btn btn-outline-success">Publish</button>
+            </div>
+
+            <div class="col-4">
+                <section class="mb-3">
+                    <h2>Popular Tags</h2>
+                    <div class="fs-5 fw-normal">
+                        <a href="#" class="badge text-bg-secondary  mb-2 me-2 p-2">Django</a>
+                        <a href="#" class="badge text-bg-primary mb-2 me-2 p-2">Python</a>
+                        <a href="#" class="badge text-bg-success mb-2 me-2 p-2">Java</a>
+                        <a href="#" class="badge text-bg-danger  mb-2 me-2 p-2">PostgreSQL</a>
+                        <a href="#" class="badge text-bg-warning  mb-2 me-2 p-2">Golang</a>
+                        <a href="#" class="badge text-bg-info  mb-2 me-2 p-2">Algorithms</a>
+                        <a href="#" class="badge text-bg-success  mb-2 me-2 p-2">MongoDB</a>
+                        <a href="#" class="badge text-bg-dark  mb-2 me-2 p-2">VS Code</a>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Best members</h2>
+                    <div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+    </main>
+    <script src="../static/js/bootstrap.min.js"></script>
+</body>
+
+</html>
