@@ -54,7 +54,7 @@
     </nav>
     <main class="container mt-3">
         <div class="d-flex gap-3 mb-3 align-items-center">
-            <h1>Log in</h1>
+            <h1>Registration</h1>
         </div>
 
         <div class="row gx-5">
@@ -62,7 +62,7 @@
                 <form>
 
                     <div class="mb-3 row">
-                       <p class="fs-4 text-danger wrong-creds">Sorry, wrong password!</p>
+                       <p class="fs-4 text-danger wrong-creds">Sorry, this email address already registered!</p>
                     </div>
 
                     <div class="mb-3 row">
@@ -73,21 +73,43 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label for="email" class="col-sm-3 col-form-label form-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        </div>
+                    </div>
+            
+                    <div class="mb-3 row">
+                        <label for="nickName" class="col-sm-3 col-form-label form-label">NickName</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="nickName" placeholder="Enter your NickName">
+                        </div>
+                    </div>
+        
+                    <div class="mb-3 row">
                         <label for="password" class="col-sm-3 col-form-label form-label">Password</label>
                         <div class="col-sm-9">
                             <input type="password" class="form-control" id="password" placeholder="Enter your password">
                         </div>
                     </div>
-            
-                    <div class="mb-5 row">
-                        <div class="col-sm-9 offset-sm-3">
-                            <button type="submit" class="btn btn-outline-success">Log in!</button>
+
+                    <div class="mb-3 row">
+                        <label for="password_repeat" class="col-sm-3 col-form-label form-label">Repeat password</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password_repeat" placeholder="Repeat your password">
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-9 offset-sm-3 fs-5">
-                            <a href="#">Create an account</a>
+
+                    <div class="mb-3 row">
+                        <label for="avatar" class="col-sm-3 col-form-label form-label">Upload avatar</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="file" id="avatar">
+                        </div>
+                    </div>
+
+                    <div class="mb-5 row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-outline-success">Register!</button>
                         </div>
                     </div>
                 </form>
