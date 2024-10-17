@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+
+    <style>
+        .badge {
+            text-decoration: none;
+            font-weight: normal;
+        }
+
+        .form-check-input {
+            width: 25px; 
+            height: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-secondary border-bottom border-2 border-dark">
+        <div class="container-fluid">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <a class="navbar-brand" href="#">ASKME</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <form class="col-7 d-flex" role="search">
+                    <input class=" form-control me-3" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Ask</button>
+                </form>
+
+                <div class="d-flex flex-row gap-3">
+                    <a href="#">Login</a>
+                    <a href="#">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-3">
+        <div class="row gap-4">
+            <div class="col-9">
+                <div class="d-flex flex-column gap-3 mb-5">
+                    <div class="card border-0 w-100 border-bottom border-2 border-dark rounded-0 pb-3" style="width: 18rem;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="border mb-2" style="height: 100px">
+                                        <img src="jpg.jpg" alt="Avatar" class="img-fluid">
+                                    </div>
+                                    <input class="form-control" type="number" value="5" placeholder="Default input"
+                                        aria-label="default input example">
+
+                                </div>
+                                <div class="col-9">
+
+                                    <h5 class="card-title">How to use SSH?</h5>
+                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                                          laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+                                           in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                                    <div class="d-flex gap-2">
+                                        Tags:
+
+                                        <a href="#" class="card-link">Another link</a>
+                                        <a href="#" class="card-link">Another link</a>
+                                        <a href="#" class="card-link">Another link</a>
+                                        <a href="#" class="card-link">Another link</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="answers d-flex flex-column gap-3 border-bottom border-2 border-dark rounded-0  pb-3">
+                        <div class="card w-100" style="width: 18rem;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="border mb-2" style="height: 100px">
+                                            <img src="jpg.jpg" alt="Avatar" class="img-fluid">
+                                        </div>
+                                        <input class="form-control" type="number" value="5" placeholder="Default input"
+                                            aria-label="default input example">
+
+                                    </div>
+                                    <div class="col-9">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vestibulum sagittis enim,
+                                             ut vestibulum tellus tincidunt dignissim. Morbi dolor orci, dignissim eu risus in, gravida egestas justo.
+                                             Duis at facilisis augue, in maximus lectus. Maecenas eu nunc eros.
+                                              In in augue egestas, posuere ante ut, auctor augue.
+                                        </p>
+
+                                        <div class="d-flex align-items-center form-check gap-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                It helped!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card w-100" style="width: 18rem;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="border mb-2" style="height: 100px">
+                                            <img src="jpg.jpg" alt="Avatar" class="img-fluid">
+                                        </div>
+                                        <input class="form-control" type="number" value="5" placeholder="Default input"
+                                            aria-label="default input example">
+
+                                    </div>
+                                    <div class="col-9">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vestibulum sagittis enim,
+                                            ut vestibulum tellus tincidunt dignissim. Morbi dolor orci, dignissim eu risus in, gravida egestas justo.
+                                            Duis at facilisis augue, in maximus lectus. Maecenas eu nunc eros.
+                                             In in augue egestas, posuere ante ut, auctor augue.
+                                        </p>
+
+                                        <div class="d-flex align-items-center form-check gap-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                It helped!
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating p-0">
+                        <textarea class="form-control mb-3" placeholder="Leave your answer here" id="floatingTextarea2" style="height: 200px"></textarea>
+                        <label for="floatingTextarea2">Answer</label>
+                        <button type="submit" class="col btn btn-outline-success">Answer</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <section class="mb-3">
+                    <h2>Popular Tags</h2>
+                    <div class="fs-5 fw-normal">
+                        <a href="#" class="badge text-bg-secondary  mb-2 me-2 p-2">Django</a>
+                        <a href="#" class="badge text-bg-primary mb-2 me-2 p-2">Python</a>
+                        <a href="#" class="badge text-bg-success mb-2 me-2 p-2">Java</a>
+                        <a href="#" class="badge text-bg-danger  mb-2 me-2 p-2">PostgreSQL</a>
+                        <a href="#" class="badge text-bg-warning  mb-2 me-2 p-2">Golang</a>
+                        <a href="#" class="badge text-bg-info  mb-2 me-2 p-2">Algorithms</a>
+                        <a href="#" class="badge text-bg-success  mb-2 me-2 p-2">MongoDB</a>
+                        <a href="#" class="badge text-bg-dark  mb-2 me-2 p-2">VS Code</a>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Best members</h2>
+                    <div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                            <li class="list-group-item"><a href="#">Member</a></li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+
+
+    </main>
+    <script src="../static/js/bootstrap.min.js"></script>
+</body>
+
+</html>
