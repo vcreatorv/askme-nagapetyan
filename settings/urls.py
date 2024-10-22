@@ -23,5 +23,10 @@ from settings import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.get_new_questions_page, name='new_questions')
+    path('', views.get_new_questions_page, name='new_questions'),
+    path('login/', views.get_login_page, name='login'),
+    path('settings/', views.get_settings_page, name='settings'),
+    path('signup/', views.get_signup_page, name='signup'),
+    path('ask/', views.get_ask_question_page, name='ask'),
+    path('question/', views.get_question_page, name='question'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 
 <head>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="row gx-5">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-8">
                 <form>
 
                     <div class="mb-3 row">
@@ -115,7 +115,7 @@
                 </form>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
                 <section class="mb-3">
                     <h2>Popular Tags</h2>
                     <div class="fs-5 fw-normal">
@@ -150,4 +150,95 @@
     <script src="../static/js/bootstrap.min.js"></script>
 </body>
 
-</html>
+</html> -->
+
+{% extends 'base.html' %}
+
+{% block style%}
+<style>
+    .badge {
+        text-decoration: none;
+        font-weight: normal;
+    }
+
+    .form-label {
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .avatar-container {
+        width: 150px;
+        height: 150px;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+<div class="d-flex flex-row gap-3">
+    <a href="#">Login</a>
+    <a href="#">Register</a>
+</div>
+{% endblock %}
+
+{% block page_header %}
+<div class="d-flex gap-3 mb-3 align-items-center">
+    <h1>Registration</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form>
+
+    <div class="mb-3 row">
+       <p class="fs-4 text-danger wrong-creds">Sorry, this email address already registered!</p>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="login" class="col-sm-3 col-form-label form-label">Login</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="login" placeholder="Enter your login">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="email" class="col-sm-3 col-form-label form-label">Email</label>
+        <div class="col-sm-9">
+            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="nickName" class="col-sm-3 col-form-label form-label">NickName</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="nickName" placeholder="Enter your NickName">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="password" class="col-sm-3 col-form-label form-label">Password</label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="password_repeat" class="col-sm-3 col-form-label form-label">Repeat password</label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" id="password_repeat" placeholder="Repeat your password">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="avatar" class="col-sm-3 col-form-label form-label">Upload avatar</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="file" id="avatar">
+        </div>
+    </div>
+
+    <div class="mb-5 row">
+        <div class="col-sm-9 offset-sm-3">
+            <button type="submit" class="btn btn-outline-success">Register!</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

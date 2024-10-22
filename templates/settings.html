@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 
 <head>
@@ -64,7 +64,7 @@
         </div>
 
         <div class="row gx-5">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-8">
                 <form>
 
                     <div class="mb-3 row">
@@ -106,7 +106,7 @@
                 </form>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
                 <section class="mb-3">
                     <h2>Popular Tags</h2>
                     <div class="fs-5 fw-normal">
@@ -141,4 +141,88 @@
     <script src="../static/js/bootstrap.min.js"></script>
 </body>
 
-</html>
+</html> -->
+
+{% extends 'base.html' %}
+
+{% block style%}
+<style>
+    .badge {
+        text-decoration: none;
+        font-weight: normal;
+    }
+
+    .form-label {
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .avatar-container {
+        width: 150px;
+        height: 150px;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+<div class="d-flex gap-1">
+    <div class="me-2" style="height: 60px; width: auto">
+        <img src="{{ auth_user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
+    </div>
+    <div>
+        <div>
+            {{ auth_user.username }}
+        </div>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_header %}
+<div class="d-flex gap-3 mb-3 align-items-center">
+    <h1>Settings: {{ auth_user.username}}</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form>
+
+    <div class="mb-3 row">
+        <label for="login" class="col-sm-3 col-form-label form-label">Login</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="login" placeholder="Enter your login">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="email" class="col-sm-3 col-form-label form-label">Email</label>
+        <div class="col-sm-9">
+            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="nickName" class="col-sm-3 col-form-label form-label">NickName</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="nickName" placeholder="Enter your NickName">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="avatar" class="col-sm-3 col-form-label form-label">Upload avatar</label>
+        <div class="col-sm-9">
+            <div class="avatar-container border mb-2 w-25" >
+                <img src="jpg.jpg" alt="Avatar" class="img-fluid">
+            </div>
+            <input class="form-control" type="file" id="avatar">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-9 offset-sm-3">
+            <button type="submit" class="btn btn-outline-success">Save</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
