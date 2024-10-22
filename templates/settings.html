@@ -173,8 +173,8 @@
         <div>
             {{ auth_user.username }}
         </div>
-        <a href="#">Settings</a>
-        <a href="#">Logout</a>
+        <a href="{% url 'settings' %}">Settings</a>
+        <a href="{% url 'signup' %}">Logout</a>
     </div>
 </div>
 {% endblock %}

@@ -21,8 +21,8 @@
 
 {% block navbar %}
 <div class="d-flex flex-row gap-3">
-    <a href="#">Login</a>
-    <a href="#">Register</a>
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'signup' %}">Register</a>
 </div>
 {% endblock %}
 
@@ -60,7 +60,7 @@
     
     <div class="row">
         <div class="col-sm-9 offset-sm-3 fs-5">
-            <a href="#">Create an account</a>
+            <a href="{% url 'signup' %}">Create an account</a>
         </div>
     </div>
 </form>

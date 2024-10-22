@@ -21,7 +21,7 @@
     <nav class="navbar navbar-expand-lg bg-body-secondary border-bottom border-2 border-dark">
         <div class="container-fluid">
             <div class="d-flex w-100 justify-content-between align-items-center">
-                <a class="navbar-brand" href="#">ASKME</a>
+                <a class="navbar-brand" href="{% url 'main' %}">ASKME</a>
     
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -51,7 +51,7 @@
                     <h2>Popular Tags</h2>
                     <div class="fs-5 fw-normal">
                         {% for tag in tags %}
-                        <a href="#" class="badge tag-badge mb-2 me-2 p-2">{{ tag.name }}</a>
+                        <a href="{% url 'tag' tag.id %}" class="badge tag-badge mb-2 me-2 p-2">{{ tag.name }}</a>
                         {% endfor %}
                     </div>
                 </section>

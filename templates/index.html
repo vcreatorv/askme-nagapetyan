@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block navbar %}
-<div class="d-flex gap-1">
+<!-- <div class="d-flex gap-1">
     <div class="me-2" style="height: 60px; width: auto">
         <img src="{{ auth_user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
     </div>
@@ -18,9 +18,13 @@
         <div>
             {{ auth_user.username }}
         </div>
-        <a href="#">Settings</a>
-        <a href="#">Logout</a>
+        <a href="{% url 'settings' %}">Settings</a>
+        <a href="{% url 'signup' %}">Logout</a>
     </div>
+</div> -->
+<div class="d-flex flex-row gap-3">
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'signup' %}">Register</a>
 </div>
 {% endblock %}
 
@@ -46,7 +50,7 @@
                 </div>
                 <div class="col-10">
                     <h5 class="card-title">{{ question.title }}</h5>
-                    <p class="card-text">{{ question.text }}</p>
+                    <p class="card-text">{{ question.description }}</p>
                     <div class="d-flex gap-5">
                         <a href="#" class="card-link">Answer ({{ question.answer }})</a>
                         <div>

@@ -24,7 +24,7 @@ top_users = [
 auth_user = {
     "id": 1,
     "username": "Valery Nagapetyan",
-    'avatar': f'/uploads/1.jpg',
+    'avatar': f'/uploads/2.jpg',
 }
 
 question = {
@@ -33,12 +33,11 @@ question = {
         "description": "I need to read file contents with FileReader in JavaScript.",
         "user": {
             "id": 103,
-            "avatar": f'/uploads/1.jpg',
+            "avatar": f'/uploads/2.jpg',
             "reputation": 8
         },
         "tags": [
-            {"id": 2, "name": "JavaScript"},
-            {"id": 9, "name": "File API"}
+            tags[4], tags[8]
         ],
         "answers": [
             {   
@@ -67,18 +66,13 @@ question = {
 
 def get_questions_list():
     new_questions = []
-    for i in range(1, 30):
+    for i in range(1, 1000):
         question_data = {
             'id': i,
             'title': f'Card title {i}',
-            'text': f'Some quick example text to build on the card title and make up the bulk of the card\'s content. {i}',
+            'description': f'Some quick example text to build on the card title and make up the bulk of the card\'s content. {i}',
             'answer': i,
-            'tags': [
-                {"id": 1, "name": "Python"},
-                {"id": 2, "name": "Django"},
-                {"id": 3, "name": "MongoDB"},
-                {"id": 4, "name": "Web"}
-            ],
+            'tags': tags[0:4],
             'user': {
                 'id': 1,
                 'avatar': f'/uploads/1.jpg',
@@ -132,8 +126,49 @@ def get_ask_question_page(request):
 
 def get_question_page(request):
     context = {
-        "question": question,
+        'question': question,
         'tags': tags,
         'top_users': top_users,
     }
     return render(request, 'question.html', context)
+
+
+
+def get_tag_question_list(chosen_tag):
+    if chosen_tag:
+        tag_name = chosen_tag['name']
+        tag_questions_list = []
+        for i in range(1, 1000):
+            question_data = {
+                'id': i,
+                'title': f'How to use {tag_name} effectively?',
+                'description': f"I recently started using {tag_name} and I'm trying to understand how to make the most out of it. Could someone explain the best practices and common pitfalls when working with {tag_name}? Any tips or resources would be greatly appreciated.",
+                'answer': i,
+                'tags': tags[i%5: 9],
+                'user': {
+                    'id': 1,
+                    'avatar': f'/uploads/1.jpg',
+                    'reputation': i % 5 + 1,
+                },
+            }
+            if any(tag['id'] == chosen_tag['id'] for tag in question_data['tags']):
+                tag_questions_list.append(question_data)
+        return tag_questions_list
+    else:
+        return None
+
+
+
+def get_tag_page(request, tag_id=1):
+    tag = next(filter(lambda t: t['id'] == tag_id, tags), None)
+    tag_page_list = {
+        'tag': tag,
+        'questions': get_tag_question_list(tag),
+    }
+    context = {
+        'auth_user': auth_user,
+        'tag_page_list': tag_page_list,
+        'tags': tags,
+        'top_users': top_users,
+    }
+    return render(request, 'tag.html', context)
