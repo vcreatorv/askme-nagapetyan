@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django.http import Http404
 
 
-tags = [
+TAGS = [
     {"id": 1, "name": "Python"},
     {"id": 2, "name": "Django"},
     {"id": 3, "name": "MongoDB"},
@@ -13,7 +14,7 @@ tags = [
     {"id": 9, "name": "File API"},
 ]
 
-top_users = [
+TOP_USERS = [
     {"id": 1, "username": "DeOwl"},
     {"id": 2, "username": "LeoY"},
     {"id": 3, "username": "Arts"},
@@ -21,13 +22,13 @@ top_users = [
     {"id": 5, "username": "ImperialMelon"},
 ]
 
-auth_user = {
+AUTH_USER = {
     "id": 1,
     "username": "Valery Nagapetyan",
     'avatar': f'/uploads/2.jpg',
 }
 
-question = {
+QUESTION = {
         "id": 3,
         "title": "How to use FileReader in JavaScript?",
         "description": "I need to read file contents with FileReader in JavaScript.",
@@ -37,7 +38,7 @@ question = {
             "reputation": 8
         },
         "tags": [
-            tags[4], tags[8]
+            TAGS[4], TAGS[8]
         ],
         "answers": [
             {   
@@ -63,112 +64,102 @@ question = {
         ]  
 }
 
+QUESTIONS = [{
+        'id': i,
+        'title': f'Card title {i}',
+        'description': f'Some quick example text to build on the card title and make up the bulk of the card\'s content. {i}',
+        'answer': i,
+        'tags': TAGS[0:4],
+        'user': {
+            'id': 1,
+            'avatar': f'/uploads/1.jpg',
+            'reputation': i % 5 + 1,
+        },
+    } for i in range(1, 1000)
+]
 
-def get_questions_list():
-    new_questions = []
-    for i in range(1, 1000):
-        question_data = {
+
+
+def get_base_context():
+    return {
+        'tags': TAGS,
+        'top_users': TOP_USERS,
+    }
+
+
+
+def get_new_questions_page(request):
+    context = get_base_context()
+    context['new_questions'] = QUESTIONS
+    return render(request, 'index.html', context)
+
+
+
+def get_login_page(request):
+    context = get_base_context()
+    return render(request, 'login.html', context)
+
+
+
+def get_settings_page(request):
+    context = get_base_context()
+    context['auth_user'] = AUTH_USER
+    return render(request, 'settings.html', context)
+
+
+
+def get_signup_page(request):
+    return render(request, 'signup.html', get_base_context())
+
+
+
+def get_ask_question_page(request):
+    return render(request, 'ask.html', get_base_context())
+
+
+
+def get_question_page(request):
+    context = get_base_context()
+    context['question'] = QUESTION
+    return render(request, 'question.html', context)
+
+
+
+def get_tag_question_list(chosen_tag):
+    if not chosen_tag:
+        return None
+    
+    tag_name = chosen_tag['name']
+    return [
+        {
             'id': i,
-            'title': f'Card title {i}',
-            'description': f'Some quick example text to build on the card title and make up the bulk of the card\'s content. {i}',
+            'title': f'How to use {tag_name} effectively?',
+            'description': f"I recently started using {tag_name} and I'm trying to understand how to make the most out of it.\
+                Could someone explain the best practices and common pitfalls when working with {tag_name}?\
+                Any tips or resources would be greatly appreciated.",
             'answer': i,
-            'tags': tags[0:4],
+            'tags': TAGS[i%5: 9],
             'user': {
                 'id': 1,
                 'avatar': f'/uploads/1.jpg',
                 'reputation': i % 5 + 1,
             },
         }
-        new_questions.append(question_data)
-    return new_questions
-
-
-def get_new_questions_page(request):
-    context = {
-        'auth_user': auth_user,
-        'new_questions': get_questions_list(),
-        'tags': tags,
-        'top_users': top_users,
-    }
-    return render(request, 'index.html', context)
-
-
-def get_login_page(request):
-    context = {
-        'tags': tags,
-        'top_users': top_users,
-    }
-    return render(request, 'login.html', context)
-
-def get_settings_page(request):
-    context = {
-        'auth_user': auth_user,
-        'tags': tags,
-        'top_users': top_users,
-    }
-    return render(request, 'settings.html', context)
-
-
-def get_signup_page(request):
-    context = {
-        'tags': tags,
-        'top_users': top_users,
-    }
-    return render(request, 'signup.html', context)
-
-def get_ask_question_page(request):
-    context = {
-        'tags': tags,
-        'top_users': top_users,
-    }
-    return render(request, 'ask.html', context)
-
-
-def get_question_page(request):
-    context = {
-        'question': question,
-        'tags': tags,
-        'top_users': top_users,
-    }
-    return render(request, 'question.html', context)
-
-
-
-def get_tag_question_list(chosen_tag):
-    if chosen_tag:
-        tag_name = chosen_tag['name']
-        tag_questions_list = []
-        for i in range(1, 1000):
-            question_data = {
-                'id': i,
-                'title': f'How to use {tag_name} effectively?',
-                'description': f"I recently started using {tag_name} and I'm trying to understand how to make the most out of it. Could someone explain the best practices and common pitfalls when working with {tag_name}? Any tips or resources would be greatly appreciated.",
-                'answer': i,
-                'tags': tags[i%5: 9],
-                'user': {
-                    'id': 1,
-                    'avatar': f'/uploads/1.jpg',
-                    'reputation': i % 5 + 1,
-                },
-            }
-            if any(tag['id'] == chosen_tag['id'] for tag in question_data['tags']):
-                tag_questions_list.append(question_data)
-        return tag_questions_list
-    else:
-        return None
+        for i in range(1, 1000)
+        if any(tag['id'] == chosen_tag['id'] for tag in TAGS[i%5: 9])
+    ]
 
 
 
 def get_tag_page(request, tag_id=1):
-    tag = next(filter(lambda t: t['id'] == tag_id, tags), None)
-    tag_page_list = {
+    tag = next(filter(lambda t: t['id'] == tag_id, TAGS), None)
+    if not tag:
+        raise Http404("Tag not found")
+
+    context = get_base_context()
+    context['auth_user'] = AUTH_USER
+    context['tag_page_list'] =  {
         'tag': tag,
         'questions': get_tag_question_list(tag),
-    }
-    context = {
-        'auth_user': auth_user,
-        'tag_page_list': tag_page_list,
-        'tags': tags,
-        'top_users': top_users,
     }
     return render(request, 'tag.html', context)

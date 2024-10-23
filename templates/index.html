@@ -56,7 +56,7 @@
                         <div>
                             Tags:
                             {% for tag in question.tags %}
-                                <a href="#" class="card-link">{{ tag.name }}</a>
+                                <a href="{% url 'tag' tag.id %}" class="card-link">{{ tag.name }}</a>
                             {% endfor %}
                         </div>
                     </div>
