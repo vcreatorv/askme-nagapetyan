@@ -30,4 +30,5 @@ urlpatterns = [
     path('ask/', views.get_ask_question_page, name='ask'),
     path('question/', views.get_question_page, name='question'),
     path('tag/<int:tag_id>/', views.get_tag_page, name='tag'),
+    path('hot/', views.get_hot_page, name='hot'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

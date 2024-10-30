@@ -10,18 +10,6 @@
 {% endblock %}
 
 {% block navbar %}
-<!-- <div class="d-flex gap-1">
-    <div class="me-2" style="height: 60px; width: auto">
-        <img src="{{ auth_user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
-    </div>
-    <div>
-        <div>
-            {{ auth_user.username }}
-        </div>
-        <a href="{% url 'settings' %}">Settings</a>
-        <a href="{% url 'signup' %}">Logout</a>
-    </div>
-</div> -->
 <div class="d-flex flex-row gap-3">
     <a href="{% url 'login' %}">Login</a>
     <a href="{% url 'signup' %}">Register</a>
@@ -30,8 +18,7 @@
 
 {% block page_header %}
 <div class="d-flex gap-3 mb-3 align-items-center">
-    <h1>New Questions</h1>
-    <a href="{% url 'hot' %}">Hot Questions</a>
+    <h1>Hot Questions</h1>
 </div>
 {% endblock %}
 

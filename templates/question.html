@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block style%}
 <style>
@@ -23,7 +23,7 @@
 
 {% block content %}
 <div class="d-flex flex-column gap-3 mb-5">
-    <div class="card border-0 w-100 border-bottom border-2 border-dark rounded-0 pb-3" style="width: 18rem;">
+    <div class="card border-0 w-100 rounded-0 pb-2 border-bottom border-2 border-dark" style="width: 18rem;">
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div class="answers d-flex flex-column gap-3 border-bottom border-2 border-dark rounded-0 pb-3">
+    <div class="answers d-flex flex-column gap-3 rounded-0 pb-3">
         {% for answer in question.answers %}
         <div class="card w-100" style="width: 18rem;">
             <div class="card-body">
@@ -74,7 +74,8 @@
         </div>
         {% endfor %}
     </div>
-    <div class="form-floating p-0">
+    {% include 'layouts/pagination.html' %}
+    <div class="border-top border-2 border-dark form-floating p-0 pt-3">
         <textarea class="form-control mb-3" placeholder="Leave your answer here" id="floatingTextarea2" style="height: 200px"></textarea>
         <label for="floatingTextarea2">Answer</label>
         <button type="submit" class="col btn btn-outline-success">Answer</button>

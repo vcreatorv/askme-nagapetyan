@@ -1,0 +1,33 @@
+<div class="d-flex flex-column gap-3">
+    {% for question in questions %}
+    <div class="card w-100" style="width: 18rem;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <div class="mb-2" style="height: 130px">
+                        <img src="{{ question.user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                    </div>
+                    <input class="form-control" type="number" value="{{ question.user.reputation }}" placeholder="Default input"
+                        aria-label="default input example">
+                </div>
+                <div class="col-10">
+
+                    <h5 class="card-title">{{ question.title }}</h5>
+                    <p class="card-text">{{ question.description }}
+
+                    <div class="d-flex gap-5">
+                        <a href="#" class="card-link">Answer ({{ question.answer }})</a>
+                        <div>
+
+                            Tags:
+                            {% for tag in question.tags %}
+                            <a href="{% url 'tag' tag.id %}" class="card-link">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

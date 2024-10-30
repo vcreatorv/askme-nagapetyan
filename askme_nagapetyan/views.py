@@ -90,7 +90,7 @@ def get_base_context():
 
 def get_new_questions_page(request):
     context = get_base_context()
-    context['new_questions'] = QUESTIONS
+    context['questions'] = QUESTIONS
     return render(request, 'index.html', context)
 
 
@@ -138,7 +138,7 @@ def get_tag_question_list(chosen_tag):
                 Could someone explain the best practices and common pitfalls when working with {tag_name}?\
                 Any tips or resources would be greatly appreciated.",
             'answer': i,
-            'tags': TAGS[i%5: 9],
+            'tags': TAGS,
             'user': {
                 'id': 1,
                 'avatar': f'/uploads/1.jpg',
@@ -146,9 +146,14 @@ def get_tag_question_list(chosen_tag):
             },
         }
         for i in range(1, 1000)
-        if any(tag['id'] == chosen_tag['id'] for tag in TAGS[i%5: 9])
+        if any(tag['id'] == chosen_tag['id'] for tag in TAGS)
     ]
 
+
+def get_hot_page(request):
+    context = get_base_context()
+    context['questions'] = QUESTIONS
+    return render(request, 'hot.html', context)
 
 
 def get_tag_page(request, tag_id=1):
@@ -158,8 +163,6 @@ def get_tag_page(request, tag_id=1):
 
     context = get_base_context()
     context['auth_user'] = AUTH_USER
-    context['tag_page_list'] =  {
-        'tag': tag,
-        'questions': get_tag_question_list(tag),
-    }
+    context['tag'] = tag
+    context['questions'] = get_tag_question_list(tag)
     return render(request, 'tag.html', context)
