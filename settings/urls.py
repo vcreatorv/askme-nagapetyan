@@ -23,7 +23,7 @@ from settings import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.get_new_questions_page, name='main'),
+    path('', views.get_main_page, name='main'),
     path('login/', views.get_login_page, name='login'),
     path('settings/', views.get_settings_page, name='settings'),
     path('signup/', views.get_signup_page, name='signup'),

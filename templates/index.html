@@ -36,6 +36,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'layouts/questions.html' %}
-{% include 'layouts/pagination.html' %}
+{% include 'layouts/questions.html' with questions=page_obj %}
+{% include 'layouts/pagination.html' with page_obj=page_obj %}
 {% endblock %}

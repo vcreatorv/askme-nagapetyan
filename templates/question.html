@@ -48,7 +48,7 @@
     </div>
 
     <div class="answers d-flex flex-column gap-3 rounded-0 pb-3">
-        {% for answer in question.answers %}
+        {% for answer in page_obj %}
         <div class="card w-100" style="width: 18rem;">
             <div class="card-body">
                 <div class="row">
@@ -74,7 +74,7 @@
         </div>
         {% endfor %}
     </div>
-    {% include 'layouts/pagination.html' %}
+    {% include 'layouts/pagination.html' with page_obj=page_obj %}
     <div class="border-top border-2 border-dark form-floating p-0 pt-3">
         <textarea class="form-control mb-3" placeholder="Leave your answer here" id="floatingTextarea2" style="height: 200px"></textarea>
         <label for="floatingTextarea2">Answer</label>
