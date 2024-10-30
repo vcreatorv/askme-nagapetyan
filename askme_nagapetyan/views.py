@@ -22,23 +22,23 @@ USERS = [{
     } for i in range(1, 100)
 ]
 
+ANSWERS = [{   
+    "id": i,
+    "question_id": i,
+    "created_at": "2024-10-04T14:15:00Z",
+    'user': USERS[i % (len(USERS) - 1)],
+    "content": "One of the most popular FileReader methods is readAsDataURL. It allows you to read a file and convert it to a string that can be used as a source for img elements. This is especially useful for previewing images before uploading them to the server. Here is a sample code that shows how to do this. In this example, we create a FileReader object, add an onload event handler that will be called after the file is read, and call the readAsDataURL method to read the file.",
+    } for i in range(1, 100)
+]
+
 QUESTIONS = [{
     'id': i,
     'title': f'Card title {i}',
     'description': f'Some quick example text to build on the card title and make up the bulk of the card\'s content. {i}',
     'tags': TAGS[0:(i) % (len(TAGS) + 1)],
-    'answer': 5,
+    'answer':  sum(1 for a in ANSWERS if a['question_id'] == i),
     'user': USERS[i % (len(USERS) - 1)]
-    } for i in range(1, 100)
-]
-
-ANSWERS = [{   
-    "id": i,
-    "question_id": 3,
-    "created_at": "2024-10-04T14:15:00Z",
-    'user': USERS[i % (len(USERS) - 1)],
-    "content": "One of the most popular FileReader methods is readAsDataURL. It allows you to read a file and convert it to a string that can be used as a source for img elements. This is especially useful for previewing images before uploading them to the server. Here is a sample code that shows how to do this. In this example, we create a FileReader object, add an onload event handler that will be called after the file is read, and call the readAsDataURL method to read the file.",
-    } for i in range(1, 100)
+    } for i in range(1, 100)    
 ]
 
 def get_top_users():
@@ -58,7 +58,7 @@ def paginate_objects(request, objects, per_page=5):
     except PageNotAnInteger:
         paginated_objects = paginator.page(1)
     except EmptyPage:
-        paginated_objects = paginator.page(paginator.num_pages)
+        paginated_objects = paginator.page(1)
     return paginated_objects
 
 def get_main_page(request):

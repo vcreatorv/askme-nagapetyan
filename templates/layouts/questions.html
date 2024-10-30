@@ -16,9 +16,8 @@
                     <p class="card-text">{{ question.description }}
 
                     <div class="d-flex gap-5">
-                        <a href="#" class="card-link">Answer ({{ question.answer }})</a>
+                        <a href="{% url 'question' question.id %}" class="card-link">Answer ({{ question.answer }})</a>
                         <div>
-
                             Tags:
                             {% for tag in question.tags %}
                             <a href="{% url 'tag' tag.id %}" class="card-link">{{ tag.name }}</a>
