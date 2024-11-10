@@ -1,25 +1,27 @@
+{% load static %}
+
 <div class="d-flex flex-column gap-3">
-    {% for question in questions %}
+    {% for question in page_obj %}
     <div class="card w-100" style="width: 18rem;">
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
-                        <img src="{{ question.user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                        <!-- Проверка на наличие аватара -->
+                        <img src="{% static 'img/'|add:question.author.profile.avatar %}" alt="{{ Avatar}}" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
-                    <input class="form-control" type="number" value="{{ question.user.reputation }}" placeholder="Default input"
-                        aria-label="default input example">
+                    <!-- Отображение репутации -->
+                    <input class="form-control" type="number" value="{{ question.like_count }}" readonly>
                 </div>
                 <div class="col-10">
-
                     <h5 class="card-title">{{ question.title }}</h5>
-                    <p class="card-text">{{ question.description }}
+                    <p class="card-text">{{ question.content }}</p>
 
                     <div class="d-flex gap-5">
-                        <a href="{% url 'question' question.id %}" class="card-link">Answer ({{ question.answer }})</a>
+                        <a href="{% url 'question' question.id %}" class="card-link">Answer ({{ question.answers.count }})</a>
                         <div>
                             Tags:
-                            {% for tag in question.tags %}
+                            {% for tag in question.tags.all %}
                             <a href="{% url 'tag' tag.id %}" class="card-link">{{ tag.name }}</a>
                             {% endfor %}
                         </div>

@@ -1,4 +1,7 @@
+import os
 import random
+
+from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.db import transaction
@@ -45,7 +48,14 @@ class Command(BaseCommand):
         return User.objects.all()
 
     def create_profiles(self, users):
-        profiles = [Profile(user=user) for user in users]
+        img_files = [f'{i}.jpg' for i in range(1, 11)]
+        profiles = []
+
+        for user in users:
+            avatar_name = random.choice(img_files)
+            profile = Profile(user=user, avatar=avatar_name)
+            profiles.append(profile)
+
         Profile.objects.bulk_create(profiles)
 
     def create_tags(self):

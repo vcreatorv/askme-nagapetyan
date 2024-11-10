@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 
+{% load static %}
+
 {% block style%}
 <style>
  .badge {
@@ -28,17 +30,17 @@
             <div class="row">
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
-                        <img src="{{ question.user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                        <img src="{% static 'img/'|add:question.author.profile.avatar %}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
-                    <input class="form-control" type="number" value="{{ question.user.reputation }}" placeholder="Default input"
+                    <input class="form-control" type="number" value="{{ question.like_count }}" placeholder="Default input"
                         aria-label="default input example">
                 </div>
                 <div class="col-10">
                     <h5 class="card-title fs-3">{{ question.title }}</h5>
-                    <p class="card-text">{{ question.description }}</p>
+                    <p class="card-text">{{ question.content }}</p>
                     <div class="d-flex gap-2">
                         Tags:
-                        {% for tag in question.tags %}
+                        {% for tag in question.tags.all %}
                             <a href="{% url 'tag' tag.id %}" class="card-link">{{ tag.name }}</a>
                         {% endfor %}
                     </div>
@@ -54,10 +56,10 @@
                 <div class="row">
                     <div class="col-2">
                         <div class="mb-2" style="height: 130px">
-                            <img src="{{ answer.user.avatar }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                            <img src="{% static 'img/'|add:answer.author.profile.avatar %}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
                         </div>
-                        <input class="form-control" type="number" value="{{ answer.user.reputation }}" placeholder="Default input"
-                            aria-label="default input example">
+                        <input class="form-control" type="number" value="{{ answer.like_count }}" placeholder="Default input"
+                            aria-label="default input example" readonly>
                     </div>
 
                     <div class="col-10">

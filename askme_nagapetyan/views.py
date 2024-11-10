@@ -1,78 +1,48 @@
-from django.shortcuts import render
-from django.http import Http404
+from django.contrib.auth.models import User
+from django.db.models import Count
+from django.shortcuts import render, get_object_or_404
+
+from .models import Question, Tag
 from .utils import paginate_objects
 
-TAGS = [
-    {"id": 1, "name": "Python"},
-    {"id": 2, "name": "Django"},
-    {"id": 3, "name": "MongoDB"},
-    {"id": 4, "name": "Web"},
-    {"id": 5, "name": "JavaScript"},
-    {"id": 6, "name": "Algorithms"},
-    {"id": 7, "name": "VS Code"},
-    {"id": 8, "name": "PostgreSQL"},
-    {"id": 9, "name": "File API"},
-]
-
-USERS = [{
-    "id": i,
-    "username": f'User {i}',
-    'avatar': f'/uploads/1.jpg',
-    'reputation': i,
-} for i in range(1, 100)
-]
-
-ANSWERS = [{
-    "id": i,
-    "question_id": i,
-    "created_at": "2024-10-04T14:15:00Z",
-    'user': USERS[i % (len(USERS) - 1)],
-    "content": "One of the most popular FileReader methods is readAsDataURL. It allows you to read a file and convert it to a string that can be used as a source for img elements. This is especially useful for previewing images before uploading them to the server. Here is a sample code that shows how to do this. In this example, we create a FileReader object, add an onload event handler that will be called after the file is read, and call the readAsDataURL method to read the file.",
-} for i in range(1, 100)
-]
-
-QUESTIONS = [{
-    'id': i,
-    'title': f'Card title {i}',
-    'description': f'Some quick example text to build on the card title and make up the bulk of the card\'s content. {i}',
-    'tags': TAGS[0:(i) % (len(TAGS) + 1)],
-    'answer': sum(1 for a in ANSWERS if a['question_id'] == i),
-    'user': USERS[i % (len(USERS) - 1)]
-} for i in range(1, 100)
-]
+SINGLETON_USER = User(id=1, username="admin")
 
 
 def get_top_users():
-    return sorted(USERS, key=lambda x: x['reputation'], reverse=True)[:5]
+    return User.objects.annotate(question_count=Count('questions'), answer_count=Count('answers')).order_by(
+        '-question_count', '-answer_count')[:5]
 
 
 def get_base_context():
     return {
-        'tags': TAGS,
+        'tags': Tag.objects.popular()[:10],
         'top_users': get_top_users(),
     }
 
 
-def get_main_page(request):
+def get_index_page(request):
+    questions = Question.objects.new()
+    page_obj = paginate_objects(request, questions)
     context = get_base_context()
-    context['page_obj'] = paginate_objects(request, QUESTIONS)
+    context['page_obj'] = page_obj
     return render(request, 'index.html', context)
 
 
-def get_hot_page(request):
+def get_hot_questions_page(request):
+    questions = Question.objects.hot()
+    page_obj = paginate_objects(request, questions)
     context = get_base_context()
-    context['page_obj'] = paginate_objects(request, QUESTIONS)
+    context['page_obj'] = page_obj
     return render(request, 'hot.html', context)
 
 
 def get_login_page(request):
-    context = get_base_context()
-    return render(request, 'login.html', context)
+    return render(request, 'login.html', get_base_context())
 
 
 def get_settings_page(request):
     context = get_base_context()
-    context['auth_user'] = USERS[0]
+    context['auth_user'] = SINGLETON_USER
     return render(request, 'settings.html', context)
 
 
@@ -84,34 +54,22 @@ def get_ask_question_page(request):
     return render(request, 'ask.html', get_base_context())
 
 
-def get_question_page(request, question_id=3):
+def get_question_page(request, question_id):
+    question = get_object_or_404(Question.objects.with_related(), pk=question_id)
+    answers = question.answers.select_related('author').order_by('-created_at')
+    page_obj = paginate_objects(request, answers)
     context = get_base_context()
-    question = next((q for q in QUESTIONS if q['id'] == question_id), None)
-    if not question:
-        raise Http404("Question not found")
-
-    question_answers = [a for a in ANSWERS if a['question_id'] == question_id]
-    question['answers'] = question_answers
-
     context['question'] = question
-    context['page_obj'] = paginate_objects(request, question_answers)
+    context['page_obj'] = page_obj
     return render(request, 'question.html', context)
 
 
-def get_tag_question_list(chosen_tag):
-    if not chosen_tag:
-        return None
-    tag_name = chosen_tag['name']
-    return [q for q in QUESTIONS if any(tag['id'] == chosen_tag['id'] for tag in q['tags'])]
-
-
-def get_tag_page(request, tag_id=1):
-    tag = next((t for t in TAGS if t['id'] == tag_id), None)
-    if not tag:
-        raise Http404("Tag not found")
-
+def get_tag_questions_page(request, tag_id):
+    tag = get_object_or_404(Tag, id=tag_id)
+    questions = Question.objects.with_related().filter(tags__id=tag_id).order_by('-created_at')
+    page_obj = paginate_objects(request, questions)
     context = get_base_context()
-    context['auth_user'] = USERS[0]
+    context['page_obj'] = page_obj
     context['tag'] = tag
-    context['page_obj'] = paginate_objects(request, get_tag_question_list(tag))
+    context['auth_user'] = SINGLETON_USER
     return render(request, 'tag.html', context)

@@ -6,11 +6,14 @@ from django.db.models import Count
 # Create your models here.
 
 class QuestionManager(models.Manager):
+    def with_related(self):
+        return self.select_related('author').prefetch_related('tags')
+
     def hot(self):
-        return self.annotate(likes_count=Count('question_like')).order_by('-likes_count')
+        return self.with_related().annotate(likes_count=Count('likes')).order_by('-likes_count')
 
     def new(self):
-        return self.order_by('-created_at')
+        return self.with_related().order_by('-created_at')
 
 
 class Question(models.Model):
@@ -21,32 +24,46 @@ class Question(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField('Tag', related_name='questions')
 
-    class Meta:
-        db_table = 'question'
+    objects = QuestionManager()
 
     def __str__(self):
         return self.title
 
+    def answer_count(self):
+        return self.answers.count()
+
+    def like_count(self):
+        return self.likes.count()
+
+    class Meta:
+        db_table = 'question'
+
+
+class TagManager(models.Manager):
+    def popular(self):
+        return self.annotate(question_count=Count('questions')).order_by('-question_count')
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        db_table = 'tag'
+    objects = TagManager()
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = 'tag'
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, blank=True)
-
-    class Meta:
-        db_table = 'profile'
+    avatar = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
+
+    class Meta:
+        db_table = 'profile'
 
 
 class Answer(models.Model):
@@ -56,16 +73,19 @@ class Answer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'answer'
-
     def __str__(self):
         return f"Answer to {self.question.title} by {self.author.username}"
+
+    def like_count(self):
+        return self.likes.count()
+
+    class Meta:
+        db_table = 'answer'
 
 
 class QuestionLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -75,7 +95,7 @@ class QuestionLike(models.Model):
 
 class AnswerLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
