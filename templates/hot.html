@@ -23,6 +23,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'layouts/questions.html' with questions=page_obj %}
-{% include 'layouts/pagination.html' with page_obj=page_obj %}
+{% include 'components/questions.html' with questions=page_obj %}
+{% include 'components/pagination.html' with page_obj=page_obj %}
 {% endblock %}

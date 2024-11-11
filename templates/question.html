@@ -33,7 +33,7 @@
                         <img src="{% static 'img/'|add:question.author.profile.avatar %}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
                     <input class="form-control" type="number" value="{{ question.like_count }}" placeholder="Default input"
-                        aria-label="default input example">
+                        aria-label="default input example" readonly>
                 </div>
                 <div class="col-10">
                     <h5 class="card-title fs-3">{{ question.title }}</h5>
@@ -76,7 +76,7 @@
         </div>
         {% endfor %}
     </div>
-    {% include 'layouts/pagination.html' with page_obj=page_obj %}
+    {% include 'components/pagination.html' with page_obj=page_obj %}
     <div class="border-top border-2 border-dark form-floating p-0 pt-3">
         <textarea class="form-control mb-3" placeholder="Leave your answer here" id="floatingTextarea2" style="height: 200px"></textarea>
         <label for="floatingTextarea2">Answer</label>
