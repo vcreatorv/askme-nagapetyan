@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to=settings.AUTH_USER_MODEL)),
-                ('tags', models.ManyToManyField(related_name='questions', to='askme_nagapetyan.tag')),
+                ('tags', models.ManyToManyField(related_name='questions', to='app.tag')),
             ],
             options={
                 'db_table': 'question',
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to=settings.AUTH_USER_MODEL)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to='askme_nagapetyan.question')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to='app.question')),
             ],
             options={
                 'db_table': 'answer',
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('answer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='askme_nagapetyan.answer')),
+                ('answer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='app.answer')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='askme_nagapetyan.question')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='app.question')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={

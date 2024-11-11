@@ -1,6 +1,6 @@
 *.pyc
 **/__pycache__/
-uploads/
+media/
 .idea/
 venv/
 db.sqlite3
