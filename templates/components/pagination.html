@@ -1,4 +1,4 @@
-{% if page_obj.has_other_pages %}
+{% if page_obj.paginator.count > 0 %}
 <nav aria-label="Page navigation bootstrap">
     <ul class="pagination mt-3">
         {% if page_obj.has_previous %}
