@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 
-from .models import Question, Tag, Profile
+from .models import Question, Tag, Profile, Answer
 from .utils import paginate_objects
 
 SINGLETON_USER = User(id=1, username="admin")
@@ -50,8 +50,8 @@ def get_ask_question_page(request):
 
 
 def get_question_page(request, question_id):
-    question = get_object_or_404(Question.objects.with_related(), pk=question_id)
-    answers = question.answers.select_related('author').order_by('-created_at')
+    question = get_object_or_404(Question, pk=question_id)
+    answers = Answer.objects.get_answers(question_id)
     page_obj = paginate_objects(request, answers)
     context = get_base_context()
     context['question'] = question
@@ -61,7 +61,7 @@ def get_question_page(request, question_id):
 
 def get_tag_questions_page(request, tag_id):
     tag = get_object_or_404(Tag, id=tag_id)
-    questions = Question.objects.with_related().filter(tags__id=tag_id).order_by('-created_at')
+    questions = Question.objects.tagged(tag.name)
     page_obj = paginate_objects(request, questions)
     context = get_base_context()
     context['page_obj'] = page_obj
