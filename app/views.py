@@ -2,21 +2,16 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 
-from .models import Question, Tag
+from .models import Question, Tag, Profile
 from .utils import paginate_objects
 
 SINGLETON_USER = User(id=1, username="admin")
 
 
-def get_top_users():
-    return User.objects.annotate(question_count=Count('questions'), answer_count=Count('answers')).order_by(
-        '-question_count', '-answer_count')[:5]
-
-
 def get_base_context():
     return {
-        'tags': Tag.objects.popular()[:10],
-        'top_users': get_top_users(),
+        'tags': Tag.objects.popular(),
+        'top_user_profiles': Profile.objects.get_top_users(),
     }
 
 

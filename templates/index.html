@@ -24,6 +24,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'components/questions.html' with questions=page_obj %}
-{% include 'components/pagination.html' with page_obj=page_obj %}
+    {% include 'components/questions.html' with questions=page_obj %}
+    {% include 'components/pagination.html' with page_obj=page_obj %}
 {% endblock %}

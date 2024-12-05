@@ -41,7 +41,7 @@ class Question(models.Model):
 
 class TagManager(models.Manager):
     def popular(self):
-        return self.annotate(question_count=Count('questions')).order_by('-question_count')
+        return self.annotate(question_count=Count('questions')).order_by('-question_count')[:10]
 
 
 class Tag(models.Model):
@@ -55,9 +55,15 @@ class Tag(models.Model):
         db_table = 'tag'
 
 
+class ProfileManager(models.Manager):
+    def get_top_users(self):
+        return self.select_related('user').annotate(answer_count=Count('user__answers')).order_by('-answer_count')[:5]
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.CharField(max_length=255, null=True, blank=True)
+    objects = ProfileManager()
 
     def __str__(self):
         return self.user.username
