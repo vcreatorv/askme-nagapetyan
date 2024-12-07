@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 
+{% load bootstrap5 %}
+
 {% block style%}
 <style>
     .badge {
@@ -33,31 +35,17 @@
 {% endblock %}
 
 {% block content %}
-<form>
+<form method="POST">
+    {% csrf_token %}
     <div class="mb-3 row">
-       <p class="fs-4 text-danger wrong-creds">Sorry, wrong password!</p>
-    </div>
-
-    <div class="mb-3 row">
-        <label for="login" class="col-sm-3 col-form-label form-label">Login</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" id="login" placeholder="Enter your login">
-        </div>
-    </div>
+            {% bootstrap_form form %}
 
-    <div class="mb-3 row">
-        <label for="password" class="col-sm-3 col-form-label form-label">Password</label>
-        <div class="col-sm-9">
-            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+            {%  buttons %}
+                <button type="submit" class="btn btn-outline-success">Log in!</button>
+            {% endbuttons %}
         </div>
     </div>
-
-    <div class="mb-5 row">
-        <div class="col-sm-9 offset-sm-3">
-            <button type="submit" class="btn btn-outline-success">Log in!</button>
-        </div>
-    </div>
-    
     <div class="row">
         <div class="col-sm-9 offset-sm-3 fs-5">
             <a href="{% url 'signup' %}">Create an account</a>

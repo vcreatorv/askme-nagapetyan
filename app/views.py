@@ -1,7 +1,10 @@
+from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 
+from .forms import LoginForm
 from .models import Question, Tag, Profile, Answer
 from .utils import paginate_objects
 
@@ -32,7 +35,19 @@ def get_hot_questions_page(request):
 
 
 def get_login_page(request):
-    return render(request, 'login.html', get_base_context())
+    login_form = LoginForm()
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = auth.authenticate(request, **login_form.cleaned_data)
+            if user:
+                auth.login(request, user)
+                return redirect(reverse('settings'))
+            login_form.add_error(None, 'Incorrect username or password')
+
+    context = get_base_context()
+    context['form'] = login_form
+    return render(request, 'login.html', context)
 
 
 def get_settings_page(request):
