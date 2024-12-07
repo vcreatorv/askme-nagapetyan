@@ -1,10 +1,9 @@
 from django.contrib import auth
 from django.contrib.auth.models import User
-from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import LoginForm
+from .forms import LoginForm, SignupForm
 from .models import Question, Tag, Profile, Answer
 from .utils import paginate_objects
 
@@ -44,7 +43,6 @@ def get_login_page(request):
                 auth.login(request, user)
                 return redirect(reverse('settings'))
             login_form.add_error(None, 'Incorrect username or password')
-
     context = get_base_context()
     context['form'] = login_form
     return render(request, 'login.html', context)
@@ -57,7 +55,17 @@ def get_settings_page(request):
 
 
 def get_signup_page(request):
-    return render(request, 'signup.html', get_base_context())
+    signup_form = SignupForm()
+    if request.method == 'POST':
+        signup_form = SignupForm(request.POST, request.FILES)
+        if signup_form.is_valid():
+            user = signup_form.save()
+            if user:
+                auth.login(request, user)
+                return redirect(reverse('index'))
+    context = get_base_context()
+    context['form'] = signup_form
+    return render(request, 'signup.html', context)
 
 
 def get_ask_question_page(request):

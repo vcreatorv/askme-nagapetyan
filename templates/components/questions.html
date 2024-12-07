@@ -8,7 +8,7 @@
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
                         <!-- Проверка на наличие аватара -->
-                        <img src="{% static 'img/'|add:question.author.profile.avatar %}" alt="{{ Avatar}}" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                        <img src="{{ question.author.profile.avatar.url }}" alt="{{ Avatar}}" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
                     <!-- Отображение репутации -->
                     <input class="form-control" type="number" value="{{ question.like_count }}" readonly>

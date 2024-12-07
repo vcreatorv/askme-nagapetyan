@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 
+{% load bootstrap5 %}
+
 {% block style%}
 <style>
     .badge {
@@ -33,58 +35,62 @@
 {% endblock %}
 
 {% block content %}
-<form>
-
-    <div class="mb-3 row">
-       <p class="fs-4 text-danger wrong-creds">Sorry, this email address already registered!</p>
-    </div>
-
-    <div class="mb-3 row">
-        <label for="login" class="col-sm-3 col-form-label form-label">Login</label>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+     <div class="mb-3 row">
         <div class="col-sm-9">
-            <input type="text" class="form-control" id="login" placeholder="Enter your login">
+            {% bootstrap_form form %}
+
+            {%  buttons %}
+               <button type="submit" class="btn btn-outline-success">Register!</button>
+            {% endbuttons %}
         </div>
     </div>
 
-    <div class="mb-3 row">
-        <label for="email" class="col-sm-3 col-form-label form-label">Email</label>
-        <div class="col-sm-9">
-            <input type="email" class="form-control" id="email" placeholder="Enter your email">
-        </div>
-    </div>
-
-    <div class="mb-3 row">
-        <label for="nickName" class="col-sm-3 col-form-label form-label">NickName</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="nickName" placeholder="Enter your NickName">
-        </div>
-    </div>
-
-    <div class="mb-3 row">
-        <label for="password" class="col-sm-3 col-form-label form-label">Password</label>
-        <div class="col-sm-9">
-            <input type="password" class="form-control" id="password" placeholder="Enter your password">
-        </div>
-    </div>
-
-    <div class="mb-3 row">
-        <label for="password_repeat" class="col-sm-3 col-form-label form-label">Repeat password</label>
-        <div class="col-sm-9">
-            <input type="password" class="form-control" id="password_repeat" placeholder="Repeat your password">
-        </div>
-    </div>
-
-    <div class="mb-3 row">
-        <label for="avatar" class="col-sm-3 col-form-label form-label">Upload avatar</label>
-        <div class="col-sm-9">
-            <input class="form-control" type="file" id="avatar">
-        </div>
-    </div>
-
-    <div class="mb-5 row">
-        <div class="col-sm-9 offset-sm-3">
-            <button type="submit" class="btn btn-outline-success">Register!</button>
-        </div>
-    </div>
 </form>
 {% endblock %}
+<!--    <div class="mb-3 row">-->
+<!--       <p class="fs-4 text-danger wrong-creds">Sorry, this email address already registered!</p>-->
+<!--    </div>-->
+
+<!--    <div class="mb-3 row">-->
+<!--        <label for="login" class="col-sm-3 col-form-label form-label">Login</label>-->
+<!--        <div class="col-sm-9">-->
+<!--            <input type="text" class="form-control" id="login" placeholder="Enter your login">-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="mb-3 row">-->
+<!--        <label for="email" class="col-sm-3 col-form-label form-label">Email</label>-->
+<!--        <div class="col-sm-9">-->
+<!--            <input type="email" class="form-control" id="email" placeholder="Enter your email">-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="mb-3 row">-->
+<!--        <label for="nickName" class="col-sm-3 col-form-label form-label">NickName</label>-->
+<!--        <div class="col-sm-9">-->
+<!--            <input type="text" class="form-control" id="nickName" placeholder="Enter your NickName">-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="mb-3 row">-->
+<!--        <label for="password" class="col-sm-3 col-form-label form-label">Password</label>-->
+<!--        <div class="col-sm-9">-->
+<!--            <input type="password" class="form-control" id="password" placeholder="Enter your password">-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="mb-3 row">-->
+<!--        <label for="password_repeat" class="col-sm-3 col-form-label form-label">Repeat password</label>-->
+<!--        <div class="col-sm-9">-->
+<!--            <input type="password" class="form-control" id="password_repeat" placeholder="Repeat your password">-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="mb-3 row">-->
+<!--        <label for="avatar" class="col-sm-3 col-form-label form-label">Upload avatar</label>-->
+<!--        <div class="col-sm-9">-->
+<!--            <input class="form-control" type="file" id="avatar">-->
+<!--        </div>-->
+<!--    </div>-->

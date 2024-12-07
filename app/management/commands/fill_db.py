@@ -48,14 +48,10 @@ class Command(BaseCommand):
         return User.objects.all()
 
     def create_profiles(self, users):
-        img_files = [f'{i}.jpg' for i in range(1, 11)]
         profiles = []
-
         for user in users:
-            avatar_name = random.choice(img_files)
-            profile = Profile(user=user, avatar=avatar_name)
+            profile = Profile(user=user)
             profiles.append(profile)
-
         Profile.objects.bulk_create(profiles)
 
     def create_tags(self):
