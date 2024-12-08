@@ -1,7 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
@@ -43,7 +42,7 @@ def get_login_page(request):
             user = auth.authenticate(request, **login_form.cleaned_data)
             if user:
                 auth.login(request, user)
-                return redirect('settings')
+                return redirect(request.GET.get("continue", "index"))
             login_form.add_error(None, 'Incorrect username or password')
     context = get_base_context()
     context['form'] = login_form
@@ -58,11 +57,16 @@ def get_settings_page(request):
         if profile_form.is_valid():
             profile_form.save()
             auth.login(request, request.user)
-            messages.success(request, 'Your profile has been updated successfully.')
             return redirect('settings')
     context = get_base_context()
     context['form'] = profile_form
     return render(request, 'settings.html', context)
+
+
+@login_required
+def logout(request):
+    auth.logout(request)
+    return redirect('index')
 
 
 def get_signup_page(request):

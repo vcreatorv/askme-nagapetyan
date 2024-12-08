@@ -11,20 +11,6 @@
 </style>
 {% endblock %}
 
-{% block navbar %}
-<div class="d-flex gap-1">
-    <div class="me-2" style="height: 60px; width: auto">
-        <img src="{% static 'img/'|add:auth_user.profile.avatar %}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
-    </div>
-    <div>
-        <div>
-            {{ auth_user.username }}
-        </div>
-        <a href="{% url 'settings' %}">Settings</a>
-        <a href="{% url 'signup' %}">Logout</a>
-    </div>
-</div>
-{% endblock %}
 
 {% block page_header %}
 <div class="d-flex gap-3 mb-3 align-items-center">
