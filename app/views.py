@@ -1,9 +1,11 @@
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, ProfileForm
 from .models import Question, Tag, Profile, Answer
 from .utils import paginate_objects
 
@@ -41,16 +43,25 @@ def get_login_page(request):
             user = auth.authenticate(request, **login_form.cleaned_data)
             if user:
                 auth.login(request, user)
-                return redirect(reverse('settings'))
+                return redirect('settings')
             login_form.add_error(None, 'Incorrect username or password')
     context = get_base_context()
     context['form'] = login_form
     return render(request, 'login.html', context)
 
 
+@login_required
 def get_settings_page(request):
+    profile_form = ProfileForm(instance=request.user.profile, user=request.user)
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile, user=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
+            auth.login(request, request.user)
+            messages.success(request, 'Your profile has been updated successfully.')
+            return redirect('settings')
     context = get_base_context()
-    context['auth_user'] = SINGLETON_USER
+    context['form'] = profile_form
     return render(request, 'settings.html', context)
 
 
@@ -62,7 +73,7 @@ def get_signup_page(request):
             user = signup_form.save()
             if user:
                 auth.login(request, user)
-                return redirect(reverse('index'))
+                return redirect('index')
     context = get_base_context()
     context['form'] = signup_form
     return render(request, 'signup.html', context)
