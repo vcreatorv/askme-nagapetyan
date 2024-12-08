@@ -107,8 +107,8 @@ def get_question_page(request, question_id):
             return redirect('login')
         answer_form = AnswerForm(request.POST, question_id=question_id, user=request.user)
         if answer_form.is_valid():
-            answer_form.save()
-            return redirect(reverse('question', args=[question_id]))
+            answer = answer_form.save()
+            return redirect(reverse('question', args=[question_id]) + f'#answer-{answer.pk}')
 
     context = get_base_context()
     context['question'] = question
