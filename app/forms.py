@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
 
-from app.models import Profile
+from app.models import Profile, Question, Tag
 
 
 class LoginForm(forms.Form):
@@ -157,7 +157,70 @@ class ProfileForm(forms.ModelForm):
         if new_avatar:
             profile.avatar = new_avatar
 
-        user.save()
-        profile.save()
+        if commit:
+            user.save()
+            profile.save()
 
         return profile
+
+
+class AskForm(forms.ModelForm):
+    title = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter question title'})
+    )
+    content = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter question content', 'rows': '5'})
+    )
+    tags = forms.CharField(
+        help_text="Enter up to 5 tags, separated by commas. Example: python, django, forms",
+        required=False
+    )
+
+    class Meta:
+        model = Question
+        fields = ['title', 'content', 'tags']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if len(title) < 10:
+            raise ValidationError("Title must be at least 10 characters long.")
+        return title
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if len(content) < 30:
+            raise ValidationError("Content must be at least 30 characters long.")
+        return content
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        if tags:
+            tags = [tag.strip() for tag in tags.split(',') if tag.strip()]
+            if len(tags) > 5:
+                raise ValidationError("You can specify at most 5 tags.")
+            for tag in tags:
+                if len(tag) > 100:
+                    raise ValidationError(f"Tag '{tag}' is too long (max 100 characters).")
+            return tags
+        return []
+
+    def save(self, commit=True):
+        question = Question(
+            author=self.user,
+            title=self.cleaned_data['title'],
+            content=self.cleaned_data['content']
+        )
+        if commit:
+            question.save()
+            tags = set(self.cleaned_data.get('tags', []))
+            print(f"tags: {tags}")
+            for tag_name in tags:
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                question.tags.add(tag)
+        return question

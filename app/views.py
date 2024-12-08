@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import LoginForm, SignupForm, ProfileForm
+from .forms import LoginForm, SignupForm, ProfileForm, AskForm
 from .models import Question, Tag, Profile, Answer
 from .utils import paginate_objects
 
@@ -83,8 +83,17 @@ def get_signup_page(request):
     return render(request, 'signup.html', context)
 
 
+@login_required
 def get_ask_question_page(request):
-    return render(request, 'ask.html', get_base_context())
+    ask_form = AskForm(user=request.user)
+    if request.method == 'POST':
+        ask_form = AskForm(request.POST, user=request.user)
+        if ask_form.is_valid():
+            question = ask_form.save()
+            return redirect('question', question_id=question.pk)
+    context = get_base_context()
+    context['form'] = ask_form
+    return render(request, 'ask.html', context)
 
 
 def get_question_page(request, question_id):

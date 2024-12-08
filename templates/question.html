@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
-                        <img src="{% static 'img/'|add:question.author.profile.avatar %}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                        <img src="{{ question.author.profile.avatar.url }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
                     <input class="form-control" type="number" value="{{ question.like_count }}" placeholder="Default input"
                         aria-label="default input example" readonly>
@@ -43,7 +43,8 @@
         </div>
     </div>
 
-    <div class="answers d-flex flex-column gap-3 rounded-0 pb-3">
+    {% if page_obj %}
+    <div class="answers d-flex flex-column gap-3 rounded-0 pb-3 border-bottom border-2 border-dark">
         {% for answer in page_obj %}
         <div class="card w-100" style="width: 18rem;">
             <div class="card-body">
@@ -69,9 +70,11 @@
             </div>
         </div>
         {% endfor %}
+        {% include 'components/pagination.html' with page_obj=page_obj %}
     </div>
-    {% include 'components/pagination.html' with page_obj=page_obj %}
-    <div class="border-top border-2 border-dark form-floating p-0 pt-3">
+    {% endif%}
+
+    <div class="form-floating p-0 pt-3">
         <textarea class="form-control mb-3" placeholder="Leave your answer here" id="floatingTextarea2" style="height: 200px"></textarea>
         <label for="floatingTextarea2">Answer</label>
         <button type="submit" class="col btn btn-outline-success">Answer</button>
