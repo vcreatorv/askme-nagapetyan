@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
 
-from app.models import Profile, Question, Tag
+from app.models import Profile, Question, Tag, Answer
 
 
 class LoginForm(forms.Form):
@@ -71,7 +71,10 @@ class SignupForm(forms.Form):
             password=self.cleaned_data['password']
         )
         avatar = self.cleaned_data.get('avatar')
-        Profile.objects.create(user=user, avatar=avatar)
+        if avatar:
+            Profile.objects.create(user=user, avatar=avatar)
+        else:
+            Profile.objects.create(user=user)
         return user
 
 
@@ -219,8 +222,38 @@ class AskForm(forms.ModelForm):
         if commit:
             question.save()
             tags = set(self.cleaned_data.get('tags', []))
-            print(f"tags: {tags}")
             for tag_name in tags:
-                tag, created = Tag.objects.get_or_create(name=tag_name)
+                tag, created = Tag.objects.get_or_create(name=tag_name.lower())
                 question.tags.add(tag)
         return question
+
+
+class AnswerForm(forms.ModelForm):
+    content = forms.CharField(
+        label='Answer',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Leave your answer here', 'rows': '5'}),
+        required=True
+    )
+
+    class Meta:
+        model = Answer
+        fields = ['content']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.question_id = kwargs.pop('question_id', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_content(self):
+        content = self.cleaned_data['content']
+        if len(content) < 30:
+            raise ValidationError("Answer must be at least 30 characters long.")
+        return content
+
+    def save(self, commit=True):
+        question = Question.objects.get(pk=self.question_id)
+        answer = Answer(author=self.user, question=question, content=self.cleaned_data['content'])
+        if commit:
+            question.save()
+            answer.save()
+        return answer
