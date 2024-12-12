@@ -28,11 +28,21 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-    
-                <form class="col-7 d-flex" role="search">
-                    <input class=" form-control me-3" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Ask</button>
-                </form>
+
+                <div class="col-7 d-flex flex-row gap-2">
+                    <div class="w-100">
+                        <form role="search">
+                            <input class=" form-control me-3" type="search" placeholder="Search" aria-label="Search">
+                        </form>
+                    </div>
+                   {% if request.user.is_authenticated %}
+                        <a href="{% url 'ask' %}" class="btn btn-outline-success">Ask</a>
+                   {% else %}
+                        <a href="{% url 'login' %}?continue={% url 'ask' %}" class="btn btn-outline-success">Ask</a>
+                   {% endif %}
+                </div>
+
+
                 {% if user.is_authenticated %}
                 <div class="d-flex gap-1">
                     <div class="me-2" style="height: 60px; width: auto">

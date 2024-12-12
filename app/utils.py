@@ -11,3 +11,5 @@ def paginate_objects(request, objects, per_page=5):
     except EmptyPage:
         paginated_objects = paginator.page(1)
     return paginated_objects
+
+
