@@ -16,13 +16,12 @@
 }
 </style>
 <link rel="stylesheet" href="{% static 'css/like_button.css' %}">
-<script src="{% static 'js/like_button.js' %}" defer></script>
 {% endblock %}
 
 
 {% block content %}
 <div class="d-flex flex-column gap-3 mb-5">
-    <div class="question-card card border-0 w-100 rounded-0 pb-2 border-bottom border-2 border-dark" data-question-id="{{question.id}}" data-is-liked="{{ question.is_liked }}" style="width: 18rem;">
+    <div class="question-card card border-0 w-100 rounded-0 pb-2 border-bottom border-2 border-dark" data-question-id="{{question.id}}" data-is-liked="{{ is_liked }}" style="width: 18rem;">
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
@@ -51,15 +50,17 @@
     {% if page_obj %}
     <div class="answers d-flex flex-column gap-3 rounded-0 pb-3 border-bottom border-2 border-dark">
         {% for answer in page_obj %}
-        <div class="card w-100" id="answer-{{ answer.pk }}" style="width: 18rem;">
+        <div class="answer-card card w-100" id="answer-{{ answer.pk }}" data-is-liked="{{ answer.is_liked }}" style="width: 18rem;">
             <div class="card-body">
                 <div class="row">
                     <div class="col-2">
                         <div class="mb-2" style="height: 130px">
                             <img src="{{ answer.author.profile.avatar.url }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
                         </div>
-                        <input class="form-control" type="number" value="{{ answer.like_count }}" placeholder="Default input"
-                            aria-label="default input example" readonly>
+                         <button class="like-button">
+                            <div class="heart"></div>
+                            <div class="like-count">{{ answer.like_count }}</div>
+                         </button>
                     </div>
 
                     <div class="col-10">
@@ -75,7 +76,9 @@
             </div>
         </div>
         {% endfor %}
-        {% include 'components/pagination.html' with page_obj=page_obj %}
+        {% if page_obj.paginator.count > 1 %}
+            {% include 'components/pagination.html' with page_obj=page_obj %}
+        {% endif%}
     </div>
     {% endif%}
 

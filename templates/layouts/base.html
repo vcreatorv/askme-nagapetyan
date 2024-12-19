@@ -11,7 +11,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
-    <script src="{% static 'js/random_tag_color.js' %}" defer></script>
     {% csrf_token %}
 
     {% block style %}
@@ -98,5 +97,6 @@
         </div>
     </main>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}" type="module"></script>
 </body>
 </html>

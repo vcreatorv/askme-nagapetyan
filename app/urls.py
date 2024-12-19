@@ -14,4 +14,5 @@ urlpatterns = [
     path('tag/<int:tag_id>/', views.get_tag_questions_page, name='tag'),
     path('hot/', views.get_hot_questions_page, name='hot'),
     path('question_like/<int:question_id>/', views.question_like, name='question_like'),
+    path('answer_like/<int:answer_id>/', views.answer_like, name='answer_like'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from .forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
-from .models import Question, Tag, Profile, Answer, QuestionLike
+from .models import Question, Tag, Profile, Answer, QuestionLike, AnswerLike
 from .utils import paginate_objects
 
 
@@ -108,7 +108,16 @@ def get_ask_question_page(request):
 
 def get_question_page(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    is_liked = QuestionLike.objects.filter(user=request.user, question=question).exists()
+
     answers = Answer.objects.get_answers(question_id)
+    if request.user.is_authenticated:
+        answers = answers.annotate(
+            is_liked=Exists(
+                AnswerLike.objects.filter(user=request.user, answer=OuterRef('pk'))
+            )
+        )
+
     page_obj = paginate_objects(request, answers)
 
     if request.method == 'POST':
@@ -120,6 +129,7 @@ def get_question_page(request, question_id):
             return redirect(reverse('question', args=[question_id]) + f'#answer-{answer.pk}')
     context = get_base_context()
     context['question'] = question
+    context['is_liked'] = is_liked
     context['page_obj'] = page_obj
     context['form'] = AnswerForm(question_id=question_id, user=request.user)
     return render(request, 'question.html', context)
@@ -159,3 +169,20 @@ def question_like(request, question_id):
     question.save()
     return JsonResponse(
         {'question_likes_count': QuestionLike.objects.filter(question=question).count(), 'liked': liked})
+
+
+@require_POST
+def answer_like(request, answer_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    answer = get_object_or_404(Answer, pk=answer_id)
+    like, like_created = AnswerLike.objects.get_or_create(user=request.user, answer=answer)
+
+    liked = True
+    if not like_created:
+        like.delete()
+        liked = False
+
+    answer.save()
+    return JsonResponse({'answer_likes_count': AnswerLike.objects.filter(answer=answer).count(), 'liked': liked})

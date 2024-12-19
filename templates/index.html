@@ -9,7 +9,6 @@
     }
 </style>
 <link rel="stylesheet" href="{% static 'css/like_button.css' %}">
-<script src="{% static 'js/like_button.js' %}" defer></script>
 {% endblock %}
 
 
@@ -22,5 +21,7 @@
 
 {% block content %}
     {% include 'components/questions.html' with questions=page_obj %}
-    {% include 'components/pagination.html' with page_obj=page_obj %}
+    {% if page_obj.paginator.count > 1 %}
+        {% include 'components/pagination.html' with page_obj=page_obj %}
+    {% endif %}
 {% endblock %}
