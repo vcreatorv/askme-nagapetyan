@@ -7,11 +7,16 @@
             <div class="row">
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
-                        <!-- Проверка на наличие аватара -->
                         <img src="{{ question.author.profile.avatar.url }}" alt="{{ Avatar}}" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
-                    <!-- Отображение репутации -->
-                    <input class="form-control" type="number" value="{{ question.like_count }}" readonly>
+                     <label class="like-button">
+                        <input type="checkbox">
+                        <div class="button-content">
+                            <div class="heart"></div>
+                            <div class="count">{{ question.like_count }}</div>
+                        </div>
+                    </label>
+
                 </div>
                 <div class="col-10">
                     <h5 class="card-title">{{ question.title }}</h5>
