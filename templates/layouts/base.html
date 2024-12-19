@@ -1,7 +1,7 @@
-{% load static %}
-
 <!doctype html>
 <html lang="en">
+
+{% load static %}
 
 <head>
     <meta charset="utf-8">
@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
     <script src="{% static 'js/random_tag_color.js' %}" defer></script>
+    {% csrf_token %}
 
     {% block style %}
     {% endblock%}

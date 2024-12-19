@@ -2,20 +2,18 @@
 
 <div class="d-flex flex-column gap-3">
     {% for question in page_obj %}
-    <div class="card w-100" style="width: 18rem;">
+    <div class="question-card card w-100" style="width: 18rem;" data-question-id="{{question.id}}" data-is-liked="{{ question.is_liked }}">
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
-                        <img src="{{ question.author.profile.avatar.url }}" alt="{{ Avatar}}" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
+                        <img src="{{ question.author.profile.avatar.url }}" alt="{{ Avatar }}" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
-                     <label class="like-button">
-                        <input type="checkbox">
-                        <div class="button-content">
-                            <div class="heart"></div>
-                            <div class="count">{{ question.like_count }}</div>
-                        </div>
-                    </label>
+
+                     <button class="like-button">
+                        <div class="heart"></div>
+                        <div class="like-count">{{ question.like_count }}</div>
+                     </button>
 
                 </div>
                 <div class="col-10">

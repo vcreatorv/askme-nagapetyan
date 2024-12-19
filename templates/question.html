@@ -16,20 +16,23 @@
 }
 </style>
 <link rel="stylesheet" href="{% static 'css/like_button.css' %}">
+<script src="{% static 'js/like_button.js' %}" defer></script>
 {% endblock %}
 
 
 {% block content %}
 <div class="d-flex flex-column gap-3 mb-5">
-    <div class="card border-0 w-100 rounded-0 pb-2 border-bottom border-2 border-dark" style="width: 18rem;">
+    <div class="question-card card border-0 w-100 rounded-0 pb-2 border-bottom border-2 border-dark" data-question-id="{{question.id}}" data-is-liked="{{ question.is_liked }}" style="width: 18rem;">
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
                     <div class="mb-2" style="height: 130px">
                         <img src="{{ question.author.profile.avatar.url }}" alt="Avatar" class=" rounded-1 img-fluid h-100 w-100 object-fit-cover">
                     </div>
-                    <input class="form-control" type="number" value="{{ question.like_count }}" placeholder="Default input"
-                        aria-label="default input example" readonly>
+                     <button class="like-button">
+                        <div class="heart"></div>
+                        <div class="like-count">{{ question.like_count }}</div>
+                     </button>
                 </div>
                 <div class="col-10">
                     <h5 class="card-title fs-3">{{ question.title }}</h5>
@@ -76,12 +79,6 @@
     </div>
     {% endif%}
 
-<!--    <div class="form-floating p-0 pt-3">-->
-<!--        <textarea class="form-control mb-3" placeholder="Leave your answer here" id="floatingTextarea2" style="height: 200px"></textarea>-->
-<!--        <label for="floatingTextarea2">Answer</label>-->
-<!--        <button type="submit" class="col btn btn-outline-success">Answer</button>-->
-<!--    </div>-->
-
     <form method="POST">
         {% csrf_token %}
         <div class="form-floating p-0 pt-3">
@@ -97,6 +94,5 @@
 
         </div>
     </form>
-
 </div>
 {% endblock %}

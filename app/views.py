@@ -1,10 +1,13 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.db.models import Exists, OuterRef
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from .forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
-from .models import Question, Tag, Profile, Answer
+from .models import Question, Tag, Profile, Answer, QuestionLike
 from .utils import paginate_objects
 
 
@@ -17,6 +20,14 @@ def get_base_context():
 
 def get_index_page(request):
     questions = Question.objects.new()
+
+    if request.user.is_authenticated:
+        questions = questions.annotate(
+            is_liked=Exists(
+                QuestionLike.objects.filter(user=request.user, question=OuterRef('pk'))
+            )
+        )
+
     page_obj = paginate_objects(request, questions)
     context = get_base_context()
     context['page_obj'] = page_obj
@@ -117,8 +128,34 @@ def get_question_page(request, question_id):
 def get_tag_questions_page(request, tag_id):
     tag = get_object_or_404(Tag, id=tag_id)
     questions = Question.objects.tagged(tag.name)
+
+    if request.user.is_authenticated:
+        questions = questions.annotate(
+            is_liked=Exists(
+                QuestionLike.objects.filter(user=request.user, question=OuterRef('pk'))
+            )
+        )
+
     page_obj = paginate_objects(request, questions)
     context = get_base_context()
     context['page_obj'] = page_obj
     context['tag'] = tag
     return render(request, 'tag.html', context)
+
+
+@require_POST
+def question_like(request, question_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    question = get_object_or_404(Question, pk=question_id)
+    like, like_created = QuestionLike.objects.get_or_create(user=request.user, question=question)
+
+    liked = True
+    if not like_created:
+        like.delete()
+        liked = False
+
+    question.save()
+    return JsonResponse(
+        {'question_likes_count': QuestionLike.objects.filter(question=question).count(), 'liked': liked})

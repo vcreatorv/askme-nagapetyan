@@ -1,15 +1,4 @@
 .like-button {
-    display: block;
-    cursor: pointer;
-    width: 100%;
-}
-
-
-.like-button input {
-    display: none;
-}
-
-.button-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,6 +7,8 @@
     border: 1px solid #dfe1e6;
     border-radius: 8px;
     transition: all 0.2s ease;
+    width: 100%;
+    cursor: pointer;
 }
 
 .heart {
@@ -50,24 +41,22 @@
     left: -5px;
 }
 
-.count {
+.like-count {
     font-size: 18px;
     color: #6c757d;
     transition: color 0.2s ease;
 }
-
-.like-button input:checked + .button-content {
+.like-button.liked {
     background-color: #ff4d8d;
     border-color: #ff4d8d;
 }
 
-.like-button input:checked + .button-content .heart,
-.like-button input:checked + .button-content .heart::before,
-.like-button input:checked + .button-content .heart::after {
+.like-button.liked .heart,
+.like-button.liked .heart::before,
+.like-button.liked .heart::after {
     background-color: white;
 }
 
-
-.like-button input:checked + .button-content .count {
+.like-button.liked .like-count {
     color: white;
 }
