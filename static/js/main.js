@@ -42,7 +42,6 @@ function questionLike() {
 
 
 function answerLike() {
-    const question_id = document.querySelector('.question-card').dataset.questionId
     const cards = document.querySelectorAll('.answer-card')
     for (const card of cards) {
         const likeButton = card.querySelector('.like-button')
@@ -85,6 +84,44 @@ function answerLike() {
 }
 
 
+function helpfulAnswer() {
+    const cards = document.querySelectorAll('.answer-card');
+    for (const card of cards) {
+        const correctCheckBox = card.querySelector('.form-check-input');
+        const answerId = card.id.split('-')[1];
+        if (correctCheckBox) {
+            correctCheckBox.addEventListener('change', (event) => {
+                const request = new Request(`/helpful_answer/${answerId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+                fetch(request)
+                    .then((response) => {
+                        if (response.status === 401) {
+                            window.location.href = '/login/?continue=' + window.location.pathname;
+                        } else if (response.status === 200) {
+                            return response.json();
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
+                            const message = data.helpful ? 'It was helpful!' : 'Not checked';
+                            const label = card.querySelector('.helpful-label');
+                            label.textContent = message;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        }
+    }
+}
+
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -113,5 +150,6 @@ function randomTagColor() {
 document.addEventListener('DOMContentLoaded', () => {
     questionLike();
     answerLike();
+    helpfulAnswer();
     randomTagColor();
 });

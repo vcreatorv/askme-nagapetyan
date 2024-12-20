@@ -108,10 +108,10 @@ def get_ask_question_page(request):
 
 def get_question_page(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    is_liked = QuestionLike.objects.filter(user=request.user, question=question).exists()
-
+    is_liked = False
     answers = Answer.objects.get_answers(question_id)
     if request.user.is_authenticated:
+        is_liked = QuestionLike.objects.filter(user=request.user, question=question).exists()
         answers = answers.annotate(
             is_liked=Exists(
                 AnswerLike.objects.filter(user=request.user, answer=OuterRef('pk'))
@@ -186,3 +186,23 @@ def answer_like(request, answer_id):
 
     answer.save()
     return JsonResponse({'answer_likes_count': AnswerLike.objects.filter(answer=answer).count(), 'liked': liked})
+
+
+
+@require_POST
+def helpful_answer(request, answer_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if answer.question.author != request.user:
+        return JsonResponse({'error': 'Permission denied'}, status=403)
+
+    if answer.helpful:
+        answer.helpful = False
+    else:
+        answer.helpful = True
+
+    answer.save()
+
+    return JsonResponse({'helpful': answer.helpful}, status=200)
