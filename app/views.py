@@ -35,6 +35,7 @@ def get_login_page(request):
     if request.user.is_authenticated:
         return redirect(request.GET.get('next') or request.GET.get('continue', 'index'))
 
+    login_form = LoginForm()
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -44,12 +45,13 @@ def get_login_page(request):
                 return redirect(request.GET.get('next') or request.GET.get('continue', 'index'))
             login_form.add_error(None, 'Incorrect username or password')
     context = get_base_context()
-    context['form'] = LoginForm()
+    context['form'] = login_form
     return render(request, 'login.html', context)
 
 
 @login_required(login_url="/login/")
 def get_settings_page(request):
+    profile_form = ProfileForm(instance=request.user.profile, user=request.user)
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile, user=request.user)
         if profile_form.is_valid():
@@ -57,7 +59,7 @@ def get_settings_page(request):
             auth.login(request, request.user)
             return redirect('settings')
     context = get_base_context()
-    context['form'] = ProfileForm(instance=request.user.profile, user=request.user)
+    context['form'] = profile_form
     return render(request, 'settings.html', context)
 
 
@@ -71,6 +73,7 @@ def get_signup_page(request):
     if request.user.is_authenticated:
         return redirect(request.GET.get('next') or request.GET.get('continue', 'index'))
 
+    signup_form = SignupForm()
     if request.method == 'POST':
         signup_form = SignupForm(request.POST, request.FILES)
         if signup_form.is_valid():
@@ -79,19 +82,20 @@ def get_signup_page(request):
                 auth.login(request, user)
                 return redirect('index')
     context = get_base_context()
-    context['form'] = SignupForm()
+    context['form'] = signup_form
     return render(request, 'signup.html', context)
 
 
 @login_required(login_url="/login/")
 def get_ask_question_page(request):
+    ask_form = AskForm(user=request.user)
     if request.method == 'POST':
         ask_form = AskForm(request.POST, user=request.user)
         if ask_form.is_valid():
             question = ask_form.save()
             return redirect('question', question_id=question.pk)
     context = get_base_context()
-    context['form'] = AskForm(user=request.user)
+    context['form'] = ask_form
     return render(request, 'ask.html', context)
 
 
@@ -100,6 +104,7 @@ def get_question_page(request, question_id):
     answers = Answer.objects.get_answers(question_id)
     page_obj = paginate_objects(request, answers)
 
+    answer_form = AnswerForm(question_id=question_id, user=request.user)
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return redirect('login')
@@ -110,7 +115,7 @@ def get_question_page(request, question_id):
     context = get_base_context()
     context['question'] = question
     context['page_obj'] = page_obj
-    context['form'] = AnswerForm(question_id=question_id, user=request.user)
+    context['form'] = answer_form
     return render(request, 'question.html', context)
 
 
