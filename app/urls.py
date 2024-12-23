@@ -16,4 +16,8 @@ urlpatterns = [
     path('question_like/<int:question_id>/', views.question_like, name='question_like'),
     path('answer_like/<int:answer_id>/', views.answer_like, name='answer_like'),
     path('helpful_answer/<int:answer_id>/', views.helpful_answer, name='helpful_answer')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
