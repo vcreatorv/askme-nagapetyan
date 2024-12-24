@@ -4,3 +4,4 @@ media/
 .idea/
 venv/
 db.sqlite3
+cache/
