@@ -122,8 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = [BASE_DIR / 'static']
+# Uncomment for gunicorn
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 MEDIA_ROOT = BASE_DIR / 'uploads'
@@ -133,3 +134,10 @@ MEDIA_URL = '/uploads/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# CENTRIFUGO settings
+CENTRIFUGO_TOKEN_HMAC_SECRET_KEY="my_secret"
+CENTRIFUGO_WS_URL="ws://127.0.0.1:8090/connection/websocket"
+CENTRIFUGO_API_URL = "http://127.0.0.1:8090/api"
+CENTRIFUGO_API_KEY = "my_api_key"

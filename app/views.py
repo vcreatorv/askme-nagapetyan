@@ -1,3 +1,7 @@
+import jwt
+import time
+from cent import Client, PublishRequest
+
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef
@@ -5,10 +9,30 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from django.forms import model_to_dict
 
 from .forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
 from .models import Question, Tag, Profile, Answer, QuestionLike, AnswerLike
 from .utils import paginate_objects
+
+from django.conf import settings as conf_settings
+
+
+client = Client(conf_settings.CENTRIFUGO_API_URL, conf_settings.CENTRIFUGO_API_KEY, timeout=1)
+
+
+def get_centrifugo_data(user_id, channel):
+     return {
+        'centrifugo': {
+            'token': jwt.encode(
+                {"sub": str(user_id), "exp": int(time.time()) + 10 * 60}, 
+                conf_settings.CENTRIFUGO_TOKEN_HMAC_SECRET_KEY, 
+                algorithm="HS256",
+            ),
+            'ws_url': conf_settings.CENTRIFUGO_WS_URL,
+            'channel': channel,
+        }
+    }
 
 
 def get_base_context():
@@ -131,12 +155,18 @@ def get_question_page(request, question_id):
         answer_form = AnswerForm(request.POST, question_id=question_id, user=request.user)
         if answer_form.is_valid():
             answer = answer_form.save()
+            publish_request = PublishRequest(channel=f'question.{question_id}', data=model_to_dict(answer))
+            client.publish(publish_request)
             return redirect(reverse('question', args=[question_id]) + f'#answer-{answer.pk}')
+    
     context = get_base_context()
     context['question'] = question
     context['is_liked'] = is_liked
     context['page_obj'] = page_obj
     context['form'] = answer_form
+    context['centrifugo'] = get_centrifugo_data(request.user.id, f'question.{question_id}')['centrifugo']
+    print(context['centrifugo'])
+
     return render(request, 'question.html', context)
 
 

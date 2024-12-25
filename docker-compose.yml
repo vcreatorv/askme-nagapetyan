@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
   postgres:
     image: postgres:latest
@@ -26,6 +26,20 @@ services:
       - pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
+
+
+  centrifugo:
+    container_name: centrifugo
+    image: centrifugo/centrifugo:v5
+    volumes:
+      - ./config.json:/centrifugo/config.json
+    command: centrifugo -c config.json
+    ports:
+      - 8090:8000
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
 
 volumes:
   postgres:
