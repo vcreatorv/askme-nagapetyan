@@ -58,7 +58,7 @@ class Tag(models.Model):
 
 class ProfileManager(models.Manager):
     def get_top_users(self):
-        return self.select_related('user').annotate(answer_count=Count('user__answers')).order_by('-answer_count')[:5]
+        return self.select_related('user').annotate(answer_count=Count('user__answers')).order_by('-answer_count')[:10]
 
 
 class Profile(models.Model):

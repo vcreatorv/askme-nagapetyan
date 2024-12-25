@@ -10,6 +10,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.forms.models import model_to_dict
+from django.core.cache import cache
 
 from .forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
 from .models import Question, Tag, Profile, Answer, QuestionLike, AnswerLike
@@ -34,11 +35,33 @@ def get_centrifugo_data(user_id, channel):
         }
     }
 
+def get_popular_tags():
+    cache_key = "popular_tags"
+    tags = cache.get(cache_key)
+    
+    # Без использования cron
+    # if not tags: 
+    #     tags = Tag.objects.popular()
+    #     cache.set(cache_key, tags, 10)
+
+    return tags
+
+def get_top_users():
+    cache_key = "top_users"
+    users = cache.get(cache_key)
+
+    # Без использования cron
+    # if not users:
+    #     users = Profile.objects.get_top_users()
+    #     cache.set(cache_key, users, 10)
+    
+    return users
+
 
 def get_base_context():
     return {
-        'tags': Tag.objects.popular(),
-        'top_user_profiles': Profile.objects.get_top_users(),
+        'tags': get_popular_tags(),
+        'top_user_profiles': get_top_users(),
     }
 
 
