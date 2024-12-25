@@ -228,6 +228,49 @@ document.addEventListener('DOMContentLoaded', () => {
     randomTagColor();
 });
 
+let searchTimeout = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.querySelector('input[type="search"]');
+    const searchSuggestions = document.createElement('div');
+    searchSuggestions.classList.add('search-suggestions');
+    searchInput.parentNode.appendChild(searchSuggestions);
+
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+
+        const query = searchInput.value.trim();
+        
+        if (query.length < 1) {
+            searchSuggestions.innerHTML = '';
+            return;
+        }
+        
+        searchTimeout = setTimeout(() => {
+            fetch(`/search/?q=${encodeURIComponent(query)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    searchSuggestions.innerHTML = '';
+                    if (data.filtered_questions.length > 0) {
+                        data.filtered_questions.forEach((item) => {
+                            const suggestion = document.createElement('div');
+                            suggestion.classList.add('search-suggestion-item');
+                            suggestion.textContent = item.title;
+                            suggestion.addEventListener('click', () => {
+                                window.location.href = item.url;
+                            });
+                            searchSuggestions.appendChild(suggestion);
+                        });
+                    } else {
+                        searchSuggestions.innerHTML = '<div class="search-suggestion-item">No filtered questions found</div>';
+                    }
+                })
+                .catch((error) => console.error('Error fetching search filtered questions:', error));
+        }, 300);
+    });
+});
+
+
 window.attachEventHandlersToNewAnswer = attachEventHandlersToNewAnswer;
 
 

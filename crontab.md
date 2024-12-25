@@ -11,9 +11,9 @@
 2. Добавьте следующие строки:
 
    ```bash
-   * * * * * cd /usr/local/share/web/askme-nagapetyan && /usr/local/share/web/askme-nagapetyan/venv/bin/python manage.py cache_popular_tags
-   * * * * * cd /usr/local/share/web/askme-nagapetyan && /usr/local/share/web/askme-nagapetyan/venv/bin/python manage.py cache_top_users
+   * * * * * cd /путь/до/директории/askme-nagapetyan && /путь/до/директории/askme-nagapetyan/venv/bin/python manage.py cache_popular_tags
+   * * * * * cd /путь/до/директории/askme-nagapetyan && /путь/до/директории/askme-nagapetyan/venv/bin/python manage.py cache_top_users
    ```
 
-Эти строки запускают команды обновления кэша каждую минуту. Можно настроить другой интервал, изменив формат Cron. Примеры можно посмотреть [здесь](https://crontab.guru/examples.html).
+Эти строки запускают команды обновления кэша каждую минуту. Можете настроить другой интервал, изменив формат Cron. Примеры составления расписания можно посмотреть [тут](https://crontab.guru/examples.html).
 

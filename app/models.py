@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Count
+from django.urls import reverse
 
 
 # Create your models here.
@@ -34,6 +35,9 @@ class Question(models.Model):
 
     def like_count(self):
         return self.likes.count()
+    
+    def get_absolute_url(self):
+        return f'/question/{self.pk}'
 
     class Meta:
         db_table = 'question'

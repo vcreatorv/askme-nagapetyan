@@ -15,7 +15,8 @@ urlpatterns = [
     path('hot/', views.get_hot_questions_page, name='hot'),
     path('question_like/<int:question_id>/', views.question_like, name='question_like'),
     path('answer_like/<int:answer_id>/', views.answer_like, name='answer_like'),
-    path('helpful_answer/<int:answer_id>/', views.helpful_answer, name='helpful_answer')
+    path('helpful_answer/<int:answer_id>/', views.helpful_answer, name='helpful_answer'),
+    path('search/', views.search, name='search'),
 ]
 
 if settings.DEBUG:

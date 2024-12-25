@@ -12,7 +12,61 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
     {% csrf_token %}
+    <!-- <style>
+        .suggestions-box {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 400px;
+            z-index: 1000;
+            padding: 5px;
+            max-height: 300px; /* Ограничение высоты */
+            overflow-y: auto; /* Прокрутка */
+            display: none; /* По умолчанию скрыто */
+        }
 
+        .suggestions-box a {
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .suggestions-box a:hover {
+            background: #f0f0f0;
+        }
+    </style> -->
+    <style>
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white; 
+            border: 1px solid #ccc;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .search-suggestion-item:hover {
+            background-color: #f1f1f1; 
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+    </style>
     {% block style %}
     {% endblock%}
 </head>
@@ -30,7 +84,7 @@
                 </button>
 
                 <div class="col-7 d-flex flex-row gap-2">
-                    <div class="w-100">
+                    <div class="search-container w-100">
                         <form role="search">
                             <input class=" form-control me-3" type="search" placeholder="Search" aria-label="Search">
                         </form>
@@ -98,5 +152,57 @@
     </main>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}" type="module"></script>
+    
+    
+    <script>
+        const searchInput = document.querySelector('input[type="search"]');
+        const suggestionsBox = document.createElement('div');
+        suggestionsBox.classList.add('suggestions-box');
+        document.body.appendChild(suggestionsBox);
+
+        let debounceTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                const query = searchInput.value.trim();
+                if (query) {
+                    suggestionsBox.style.display = 'block'; // Показываем suggestionsBox при вводе текста
+
+                    fetch(`/search/?q=${encodeURIComponent(query)}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.results.length > 0) {
+                            suggestionsBox.innerHTML = data.results
+                                .map(result => `<a href="${result.url}">${result.title}</a>`)
+                                .join('');
+                        } else {
+                            suggestionsBox.innerHTML = '<p style="padding: 5px; color: #888;">Ничего не найдено</p>';
+                        }
+                        const rect = searchInput.getBoundingClientRect();
+                        suggestionsBox.style.left = `${rect.left}px`;
+                        suggestionsBox.style.width = `${rect.width}px`;
+
+                        // Проверим, не выходит ли box за пределы экрана
+                        const boxRect = suggestionsBox.getBoundingClientRect();
+                        const windowHeight = window.innerHeight;
+                        if (boxRect.bottom > windowHeight) {
+                            suggestionsBox.style.top = `${rect.top - boxRect.height - 5}px`; // Позиционируем сверху, если блок выходит за экран
+                        } else {
+                            suggestionsBox.style.top = `${rect.bottom + window.scrollY}px`; // Иначе оставляем снизу
+                        }
+                    });
+                } else {
+                    suggestionsBox.style.display = 'none'; // Скрываем suggestionsBox, если пустой запрос
+                    suggestionsBox.innerHTML = ''; // Очищаем содержимое
+                }
+            }, 300);
+        });
+    </script>
+
+
 </body>
 </html>

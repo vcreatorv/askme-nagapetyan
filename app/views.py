@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.forms.models import model_to_dict
 from django.core.cache import cache
+from django.db.models import Q
 
 from .forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
 from .models import Question, Tag, Profile, Answer, QuestionLike, AnswerLike
@@ -276,3 +277,23 @@ def helpful_answer(request, answer_id):
     answer.save()
 
     return JsonResponse({'helpful': answer.helpful}, status=200)
+
+
+
+def search(request):
+    query = request.GET.get('q', '').strip()
+    if not query:
+        return JsonResponse({'filtered_questions': []})
+
+    filtered_questions = Question.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))[:10]
+
+    data = {
+        'filtered_questions': [
+            {
+                'title': question.title,
+                'url': question.get_absolute_url()
+            }
+            for question in filtered_questions
+        ]
+    }
+    return JsonResponse(data)
