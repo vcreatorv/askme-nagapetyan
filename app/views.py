@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from django.forms import model_to_dict
+from django.forms.models import model_to_dict
 
 from .forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
 from .models import Question, Tag, Profile, Answer, QuestionLike, AnswerLike
@@ -155,8 +155,20 @@ def get_question_page(request, question_id):
         answer_form = AnswerForm(request.POST, question_id=question_id, user=request.user)
         if answer_form.is_valid():
             answer = answer_form.save()
-            publish_request = PublishRequest(channel=f'question.{question_id}', data=model_to_dict(answer))
+            
+            answer_data = model_to_dict(answer)
+            answer_data['author'] = {
+                'id': answer.author.id,
+                'username': answer.author.username,
+                'profile': {
+                    'avatar': {
+                        'url': answer.author.profile.avatar.url
+                    }
+                }
+            }
+            publish_request = PublishRequest(channel=f'question.{question_id}', data=answer_data)
             client.publish(publish_request)
+
             return redirect(reverse('question', args=[question_id]) + f'#answer-{answer.pk}')
     
     context = get_base_context()

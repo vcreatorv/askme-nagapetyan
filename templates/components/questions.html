@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="d-flex flex-column gap-3">
+<div class="questions d-flex flex-column gap-3">
     {% for question in page_obj %}
     <div class="question-card card w-100" style="width: 18rem;" data-question-id="{{question.id}}" data-is-liked="{{ question.is_liked }}">
         <div class="card-body">

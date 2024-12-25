@@ -122,6 +122,8 @@ function helpfulAnswer() {
 }
 
 
+
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -147,9 +149,85 @@ function randomTagColor() {
     });
 }
 
+
+function attachEventHandlersToNewAnswer(answerId) {
+    const newAnswerCard = document.querySelector(`#answer-${answerId}`);
+    if (!newAnswerCard) return;
+
+    const likeButton = newAnswerCard.querySelector('.like-button');
+    const likeCount = newAnswerCard.querySelector('.like-count');
+
+    if (likeButton && likeCount) {
+        likeButton.addEventListener('click', () => {
+            const request = new Request(`/answer_like/${answerId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
+            fetch(request)
+                .then((response) => {
+                    if (response.status === 401) {
+                        window.location.href = '/login/?continue=' + window.location.pathname;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then((data) => {
+                    if (data) {
+                        likeCount.innerHTML = data.answer_likes_count;
+                        if (data.liked) {
+                            likeButton.classList.add('liked');
+                        } else {
+                            likeButton.classList.remove('liked');
+                        }
+                    }
+                });
+        });
+    }
+
+    const correctCheckBox = newAnswerCard.querySelector('.form-check-input');
+    if (correctCheckBox) {
+        correctCheckBox.addEventListener('change', (event) => {
+            const request = new Request(`/helpful_answer/${answerId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
+            fetch(request)
+                .then((response) => {
+                    if (response.status === 401) {
+                        window.location.href = '/login/?continue=' + window.location.pathname;
+                    } else if (response.status === 200) {
+                        return response.json();
+                    }
+                })
+                .then((data) => {
+                    if (data) {
+                        const message = data.helpful ? 'It was helpful!' : 'Not checked';
+                        const label = newAnswerCard.querySelector('.helpful-label');
+                        if (label) {
+                            label.textContent = message;
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     questionLike();
     answerLike();
     helpfulAnswer();
     randomTagColor();
 });
+
+window.attachEventHandlersToNewAnswer = attachEventHandlersToNewAnswer;
+
+

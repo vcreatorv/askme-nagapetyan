@@ -36,7 +36,7 @@
                 <div class="col-10">
                     <h5 class="card-title fs-3">{{ question.title }}</h5>
                     <p class="card-text">{{ question.content }}</p>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 flex-wrap">
                         Tags:
                         {% for tag in question.tags.all %}
                             <a href="{% url 'tag' tag.id %}" class="card-link">{{ tag.name }}</a>
@@ -84,6 +84,7 @@
                                 {% endif %}
                             {% endif %}
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -129,9 +130,9 @@
     const sub = centrifuge.newSubscription('{{ centrifugo.channel }}');
 
     sub.on('publication', function (ctx) {
-        const data = ctx.data; 
+        const answer = ctx.data; 
 
-        console.log('New answer data:', data);
+        console.log('New answer data:', answer);
 
         const answersContainer = document.querySelector('.answers');
         if (!answersContainer) {
@@ -140,32 +141,61 @@
             newAnswersContainer.className = 'answers d-flex flex-column gap-3 rounded-0 pb-3 border-bottom border-2 border-dark';
             questionsContainer.insertBefore(newAnswersContainer, questionsContainer.querySelector('form'));
         }
+
+        const isAuthenticated = {{ user.is_authenticated|lower }};
+
+        const isAuthor = "{{ user.pk }}" === String(answer.question.author_id);
+
+        let helpfulMarkup = '';
+        if (isAuthenticated && isAuthor) {
+            helpfulMarkup = `
+                <input type="checkbox" class="m-0 form-check-input" id="checkbox-${answer.id}" ${answer.helpful ? 'checked' : ''}>
+                <label class="helpful-label form-check-label" for="checkbox-${answer.id}">
+                    ${answer.helpful ? 'It was helpful!' : 'Not checked'}
+                </label>`;
+        } else if (answer.helpful) {
+            helpfulMarkup = `
+                <div class="d-flex align-items-center">
+                    <img src="/static/img/answer_check_mark.png" alt="CheckMark" class="me-3" style="width: 20px; height: 20px;">
+                    <p class="mb-0">It was helpful!</p>
+                </div>`;
+        }
+
         const answerHtml = `
-            <div class="answer-card card w-100" id="answer-${data.id}" data-is-liked="false" style="width: 18rem;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="mb-2" style="height: 130px">
-                                <img src="/static/img/default_avatar.png" alt="Avatar" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
-                            </div>
-                            <button class="like-button">
-                                <div class="heart"></div>
-                                <div class="like-count">0</div>
-                            </button>
+        <div class="answer-card card w-100" id="answer-${ answer.id }" data-is-liked="false" style="width: 18rem;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <div class="mb-2" style="height: 130px">
+                           <img src="${answer.author?.profile?.avatar?.url || '/static/img/default_profile.png'}" alt="Avatar" class="rounded-1 img-fluid h-100 w-100 object-fit-cover">
                         </div>
-                        <div class="col-10">
-                            <p class="card-text">${data.content.replace(/\n/g, '<br>')}</p>
-                            <div class="d-flex align-items-center gap-3">
-                                <!-- Дополнительная логика для отображения чекбокса "helpful" -->
-                            </div>
+                         <button class="like-button">
+                            <div class="heart"></div>
+                            <div class="like-count">${ answer.like_count || 0 }</div>
+                         </button>
+                    </div>
+
+                    <div class="col-10">
+                        <p class="card-text">${answer.content.replace(/\n/g, '<br>')}</p>
+                        <div class="d-flex align-items-center gap-3">
+                            ${helpfulMarkup}
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         `;
         
         const container = document.querySelector('.answers');
         container.insertAdjacentHTML("afterbegin", answerHtml);
+
+        window.attachEventHandlersToNewAnswer(answer.id);
+
+        const maxAnswersPerPage = {{ page_obj.paginator.per_page }};
+        const currentAnswers = container.querySelectorAll('.answer-card');
+        if (currentAnswers.length > maxAnswersPerPage) {
+            currentAnswers[currentAnswers.length - 1].remove();
+        }
 
     }).on('subscribing', function (ctx) {
         console.log(`subscribing: ${ctx.code}, ${ctx.reason}`);
@@ -178,36 +208,3 @@
 </script>
 
 {% endblock %}
-
-// Динамически создаем HTML для нового ответа
-// const answerHtml = `
-//     <div class="card w-100" style="width: 18rem;">
-//         <div class="card-body">
-//             <div class="row">
-//                 <div class="col-3">
-//                     <div class="border mb-2 d-inline-block">
-//                         <img src="${data.author.avatar ? data.author.avatar : '{% static 'img/jpg.jpg' %}'}"
-//                              alt="Avatar" class="img-thumbnail" style="height: 100px;">
-//                     </div>
-//                     ${data.author.name}
-//                     <div class="like-section d-flex align-items-center gap-2">
-//                         <button class="btn btn-outline-success" data-type="answer" data-id="${data.id}" type="button"
-//                                 style="display: inline-flex; align-items: center;">
-//                             👍
-//                         </button>
-//                         <span class="rating">Likes:</span>
-//                         <span class="rating">${data.likes_count}</span>
-//                     </div>
-//                 </div>
-//                 <div class="col-9">
-//                     <p class="card-text">${data.content}</p>
-//                     ${data.is_correct ?
-//                         `<div class="correct-answer-sticker d-flex align-items-center gap-2">
-//                             <span class="badge bg-success">✅ Correct!</span>
-//                         </div>`
-//                         : ''}
-//                 </div>
-//             </div>
-//         </div>
-//     </div>
-// `;
