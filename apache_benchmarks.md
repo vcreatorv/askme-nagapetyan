@@ -163,6 +163,17 @@ Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
 
 Benchmarking 127.0.0.1 (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
 
 
 Server Software:        nginx/1.18.0
@@ -173,33 +184,33 @@ Document Path:          /hot/
 Document Length:        613540 bytes
 
 Concurrency Level:      10
-Time taken for tests:   0.803 seconds
+Time taken for tests:   6.404 seconds
 Complete requests:      1000
 Failed requests:        0
-Total transferred:      613872000 bytes
+Total transferred:      613872001 bytes
 HTML transferred:       613540000 bytes
-Requests per second:    1245.48 [#/sec] (mean)
-Time per request:       8.029 [ms] (mean)
-Time per request:       0.803 [ms] (mean, across all concurrent requests)
-Transfer rate:          746647.01 [Kbytes/sec] received
+Requests per second:    156.15 [#/sec] (mean)
+Time per request:       64.042 [ms] (mean)
+Time per request:       6.404 [ms] (mean, across all concurrent requests)
+Transfer rate:          93608.43 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.5      0       4
-Processing:     1    8   3.9      7      34
-Waiting:        0    1   2.5      0      24
-Total:          1    8   4.0      7      34
+Connect:        0    0   0.4      0       5
+Processing:     2   13 178.2      7    5641
+Waiting:        0    6 178.3      0    5638
+Total:          2   13 178.2      7    5642
 
 Percentage of the requests served within a certain time (ms)
   50%      7
   66%      8
-  75%     10
-  80%     10
-  90%     12
-  95%     14
-  98%     19
-  99%     31
- 100%     34 (longest request)
+  75%      8
+  80%      9
+  90%     11
+  95%     12
+  98%     14
+  99%     15
+ 100%   5642 (longest request)
 ```
 
 ## Отдача динамического документа через проксирование запроса с nginx на gunicorn, при кэшировние ответа на nginx (proxy cache):
@@ -259,4 +270,4 @@ Percentage of the requests served within a certain time (ms)
 - Nginx обрабатывает примерно в 5 раз больше запросов в секунду (**Requests per second**), имеет в 5 раз меньшее среднее время обработки запроса (**Time per request (mean)**) и в 5 раз выше скорость передачи данных (**Transfer rate**).
 
 Во сколько раз ускоряет работу proxy_cache?
-- Кэширование на Nginx (**proxy cache**) в среднем ускоряет обработку запросов на 4% по сравнению с проксированием без кэширования и на 2530 раз по сравнению прямым обращением к приложению через Gunicorn.
+- Кэширование на Nginx (**proxy cache**) в среднем ускоряет обработку запросов в 8 раз по сравнению с проксированием без кэширования и на 2530 раз по сравнению прямым обращением к приложению через Gunicorn.
